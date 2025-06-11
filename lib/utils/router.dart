@@ -14,6 +14,10 @@ class _AppRouter {
         path: '/add-record',
         builder: (context, state) => const AddRecordPage(),
       ),
+      GoRoute(
+        path: '/mark-paid',
+        builder: (context, state) => const MarkPaidPage(),
+      ),
     ],
   );
 }

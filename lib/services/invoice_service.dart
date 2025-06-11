@@ -1,17 +1,48 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:lunch_sharing/utils/index.dart';
+import 'package:lunch_sharing/models/index.dart';
 
 class InvoiceService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<List<Invoices>> fetchInvoices({
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
+    try {
+      QuerySnapshot<Map<String, dynamic>> invoiceSnap;
+      if (startDate == null && endDate == null) {
+        invoiceSnap = await _firestore
+            .collection('invoices')
+            .orderBy('createdAt', descending: true)
+            .get();
+      } else {
+        invoiceSnap = await _firestore
+            .collection('invoices')
+            .where('createdAt', isGreaterThanOrEqualTo: startDate)
+            .where('createdAt', isLessThanOrEqualTo: endDate)
+            .orderBy('createdAt', descending: true)
+            .get();
+      }
+      return Future.wait(
+        invoiceSnap.docs.map((invDoc) async {
+          return Invoices.fromMap(invDoc.id, invDoc.data());
+        }).toList(),
+      );
+    } catch (e) {
+      log(e.toString());
+
+      rethrow;
+    }
+  }
 
   // Hàm để thêm một hóa đơn mới
   Future<bool> addInvoice({
     required String storeName,
     required double paidAmount,
     required DateTime date,
-    required List<OrderRecord> orderers,
+    required List<Orderers> orderers,
   }) async {
     try {
       // Dữ liệu mẫu
@@ -19,7 +50,7 @@ class InvoiceService {
         "storeName": storeName,
         "paidAmount": paidAmount,
         "createdAt": Timestamp.fromDate(date),
-        "orderers": orderers.map((e) => e.toJson()).toList(),
+        // "orderers": orderers.map((e) => e.toJson()).toList(),
       };
 
       await _firestore.collection('invoices').add(newInvoiceData);
@@ -31,13 +62,65 @@ class InvoiceService {
     }
   }
 
-  // Hàm để đọc tất cả hóa đơn (dưới dạng stream để tự động cập nhật UI)
-  Stream<QuerySnapshot> getInvoicesStream() {
-    return _firestore
-        .collection('invoices')
-        .orderBy('createdAt', descending: true)
-        .snapshots();
+  Future<bool> markPaid({
+    required String invoiceId,
+    required String ordererId,
+  }) async {
+    try {
+      final invoiceRef = FirebaseFirestore.instance
+          .collection('invoices')
+          .doc(invoiceId);
+
+      final snapshot = await invoiceRef.get();
+      if (!snapshot.exists) {
+        log("Invoice không tồn tại");
+        return false;
+      }
+      final orderers = snapshot.data()?['orderers'] ?? [];
+      for (var orderer in orderers) {
+        if (orderer['id'] == ordererId) {
+          orderer['isPaid'] = true;
+          break;
+        }
+      }
+      await invoiceRef.update({'orderers': orderers});
+      log(
+        'Đánh dấu đã thanh toán thành công cho orderer $ordererId trong hóa đơn $invoiceId',
+      );
+
+      return true;
+    } catch (e) {
+      log('Lỗi khi đánh dấu đã thanh toán: $e');
+      return false;
+    }
   }
+
+  // Hàm để đọc tất cả hóa đơn (dưới dạng stream để tự động cập nhật UI)
+  // Stream<QuerySnapshot> getInvoicesStream({
+  //   required DateTime startDate,
+  //   required DateTime endDate,
+  // }) {
+  //   try {
+  //     if (startDate.difference(DateTime.now()).inDays == 0 &&
+  //         endDate.difference(DateTime.now()).inDays == 0) {
+  //       return _firestore
+  //           .collection('invoices')
+  //           .orderBy('createdAt', descending: true)
+  //           .snapshots();
+  //     }
+
+  //     return _firestore
+  //         .collection('invoices')
+  //         .where('createdAt', isGreaterThanOrEqualTo: startDate)
+  //         .where('createdAt', isLessThanOrEqualTo: endDate)
+  //         .orderBy('createdAt', descending: true)
+  //         .snapshots();
+  //   } catch (e) {
+  //     log(e.toString());
+
+  //     rethrow;
+  //   }
+  // }
 
   // Hàm để đọc các hóa đơn trong một ngày cụ thể
   Future<List<QueryDocumentSnapshot>> getInvoicesByDate(DateTime date) async {

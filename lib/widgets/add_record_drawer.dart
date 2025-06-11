@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lunch_sharing/models/index.dart';
 import 'package:lunch_sharing/services/user_order_service.dart';
-import 'package:lunch_sharing/utils/index.dart';
 
 class AddRecordDrawer extends StatefulWidget {
   const AddRecordDrawer({super.key, this.onConfirm});
 
-  final Function(List<OrderRecord>)? onConfirm;
+  final Function(List<Orderers>)? onConfirm;
   @override
   State<AddRecordDrawer> createState() => _AddRecordDrawerState();
 }
 
 class _AddRecordDrawerState extends State<AddRecordDrawer> {
-  List<OrderRecord> users = [];
-  List<OrderRecord> selected = [];
+  List<Orderers> users = [];
+  List<Orderers> selected = [];
   bool _isLoading = true;
 
   @override
@@ -29,7 +29,7 @@ class _AddRecordDrawerState extends State<AddRecordDrawer> {
     // Luôn kiểm tra `mounted` trước khi gọi setState trong hàm async
     if (mounted) {
       setState(() {
-        users = data.map((e) => OrderRecord(name: e)).toList();
+        users = data.map((e) => Orderers(name: e)).toList();
         _isLoading = false; // Tắt loading indicator
       });
     }
@@ -118,7 +118,7 @@ class _AddRecordDrawerState extends State<AddRecordDrawer> {
                           onChanged: (value) {
                             setState(() {
                               selected[index] = selected[index].copyWith(
-                                original: double.tryParse(value) ?? 0,
+                                itemPrice: double.tryParse(value) ?? 0,
                               );
                             });
                           },
@@ -150,7 +150,7 @@ class _AddRecordDrawerState extends State<AddRecordDrawer> {
               Visibility(
                 visible: selected.isNotEmpty,
                 child: Text(
-                  "Total: ${selected.fold(0.0, (sum, item) => sum + item.original).toStringAsFixed(2)}",
+                  "Total: ${selected.fold(0.0, (sum, item) => sum + item.itemPrice).toStringAsFixed(2)}",
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -164,7 +164,7 @@ class _AddRecordDrawerState extends State<AddRecordDrawer> {
 
                 child: InkWell(
                   onTap: () {
-                    bool isAnyEmpty = selected.any((e) => e.original == 0);
+                    bool isAnyEmpty = selected.any((e) => e.itemPrice == 0);
                     if (isAnyEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('Please fill all fields')),
@@ -174,7 +174,7 @@ class _AddRecordDrawerState extends State<AddRecordDrawer> {
 
                     final total = selected.fold(
                       0.0,
-                      (sum, item) => sum + item.original,
+                      (sum, item) => sum + item.itemPrice,
                     );
                     selected = selected
                         .map((e) => e.calculatePercentage(total))

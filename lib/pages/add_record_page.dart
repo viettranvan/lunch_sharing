@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:lunch_sharing/models/index.dart';
 import 'package:lunch_sharing/services/invoice_service.dart';
-import 'package:lunch_sharing/utils/index.dart';
 import 'package:lunch_sharing/widgets/index.dart';
 
 class AddRecordPage extends StatefulWidget {
@@ -13,7 +13,7 @@ class AddRecordPage extends StatefulWidget {
 }
 
 class _AddRecordPageState extends State<AddRecordPage> {
-  List<OrderRecord> records = [];
+  List<Orderers> records = [];
   final TextEditingController storeNameCtrl = TextEditingController();
 
   double totalOriginal = 0;
@@ -31,7 +31,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
               records = value;
               totalOriginal = records.fold(
                 0.0,
-                (sum, item) => sum + item.original,
+                (sum, item) => sum + item.itemPrice,
               );
               if (totalOriginal > 0 && actualPurchase > 0) {
                 delta = (actualPurchase - totalOriginal);
@@ -159,7 +159,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
                 Text('Select a Date: '),
                 InkWell(
                   onTap: () {
-                    DateRangePicker.show(
+                    SingleDatePicker.show(
                       context,
                       onDateSelected: (value) {
                         setState(() {
@@ -300,7 +300,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
                               ),
                               // * Original Price
                               Text(
-                                records[index].original.toString(),
+                                records[index].itemPrice.toString(),
                                 textAlign: TextAlign.center,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -315,9 +315,9 @@ class _AddRecordPageState extends State<AddRecordPage> {
                               // * Actual Price
                               Text(
                                 delta != 0
-                                    ? (records[index].original +
+                                    ? (records[index].itemPrice +
                                               delta *
-                                                  (records[index].original /
+                                                  (records[index].itemPrice /
                                                       totalOriginal))
                                           .toStringAsFixed(2)
                                     : "-",

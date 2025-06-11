@@ -6,9 +6,10 @@ const List<String> kBaseUser = ['Ryuk', 'Leo', 'Richard', 'Eric', 'Levi'];
 String formatFirebaseTimestamp(Timestamp timestamp) {
   DateTime dateTime = timestamp.toDate();
 
-  final DateFormat formatter = DateFormat("EEEE, 'Ngày' dd-MM-yyyy", 'vi_VN');
-
-  String formattedDate = formatter.format(dateTime);
+  String formattedDate = DateFormat(
+    "EEEE, 'Ngày' dd-MM-yyyy",
+    'vi_VN',
+  ).format(dateTime);
 
   return formattedDate;
 }

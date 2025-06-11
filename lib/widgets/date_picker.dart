@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
-class DateRangePicker {
+class SingleDatePicker {
   static void show(
     BuildContext context, {
     bool isLimitMaxDate = true,
