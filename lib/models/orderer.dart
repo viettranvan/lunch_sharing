@@ -16,14 +16,21 @@ class Orderers extends Equatable {
     this.percentage = 0,
   });
 
-  Orderers copyWith({String? name, double? itemPrice}) {
+  Orderers copyWith({
+    String? id,
+    double? actualPrice,
+    bool? isPaid,
+    double? itemPrice,
+    String? name,
+    double? percentage,
+  }) {
     return Orderers(
-      id: id,
-      actualPrice: actualPrice,
-      isPaid: isPaid,
-      percentage: percentage,
-      name: name ?? this.name,
+      id: id ?? this.id,
+      actualPrice: actualPrice ?? this.actualPrice,
+      isPaid: isPaid ?? this.isPaid,
       itemPrice: itemPrice ?? this.itemPrice,
+      name: name ?? this.name,
+      percentage: percentage ?? this.percentage,
     );
   }
 

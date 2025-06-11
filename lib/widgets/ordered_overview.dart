@@ -35,6 +35,12 @@ class _OrderedOverviewState extends State<OrderedOverview> {
           }
         }
       }
+
+      for (final user in users) {
+        if (buildFinal(user, widget.invoices) == 0) {
+          users.remove(user);
+        }
+      }
     }
     super.didUpdateWidget(oldWidget);
   }
@@ -81,7 +87,9 @@ class _OrderedOverviewState extends State<OrderedOverview> {
           percentage: 0.0,
         ),
       );
-      result += orderer.actualPrice;
+      if (!orderer.isPaid) {
+        result += orderer.actualPrice;
+      }
     }
 
     return result;

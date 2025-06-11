@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+
 import 'package:lunch_sharing/models/orderer.dart';
 
 class Invoices extends Equatable {
@@ -31,4 +32,20 @@ class Invoices extends Equatable {
 
   @override
   List<Object?> get props => [id, storeName, paidAmount, createdAt, orderers];
+
+  Invoices copyWith({
+    String? id,
+    String? storeName,
+    double? paidAmount,
+    Timestamp? createdAt,
+    List<Orderers>? orderers,
+  }) {
+    return Invoices(
+      id: id ?? this.id,
+      storeName: storeName ?? this.storeName,
+      paidAmount: paidAmount ?? this.paidAmount,
+      createdAt: createdAt ?? this.createdAt,
+      orderers: orderers ?? this.orderers,
+    );
+  }
 }
