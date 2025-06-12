@@ -1,4 +1,9 @@
-name: Deploy Flutter Web to GitHub Pages
+name: Deploy Lunch Sharing to GitHub Pages
+
+# Cấp phép ghi nội dung để deploy
+permissions:
+  contents: write
+  pages: write
 
 on:
   push:
