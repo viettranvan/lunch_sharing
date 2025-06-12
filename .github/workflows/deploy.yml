@@ -10,16 +10,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      # Bước 1: Checkout source code
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.22.0' # thay bằng version bạn dùng
+      # Bước 2: Tải Flutter 3.22.0 từ source chính thức
+      - name: Install Flutter 3.22.0
+        run: |
+          git clone https://github.com/flutter/flutter.git --branch 3.22.0 --depth 1
+          echo "$GITHUB_WORKSPACE/flutter/bin" >> $GITHUB_PATH
 
-      - run: flutter build web
+      # Bước 3: Kiểm tra version đã đúng chưa
+      - name: Flutter Version
+        run: flutter --version
 
+      # Bước 4: Cài dependencies
+      - name: Install dependencies
+        run: flutter pub get
+
+      # Bước 5: Build Flutter Web
+      - name: Build Flutter Web
+        run: flutter build web --release
+
+      # Bước 6: Deploy lên GitHub Pages (nhánh gh-pages)
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build/web
+          # publish_branch: deploy-web # (mặc định không truyền gì thì sẽ là gh-pages) nếu bạn muốn deploy vào branch khác ngoài gh-pages )
