@@ -10,38 +10,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout code
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Clone đúng Flutter 3.22.0
-      - name: Clone Flutter SDK
+      - name: Clone Flutter 3.22.0 and build
+        shell: bash
         run: |
-          git clone https://github.com/flutter/flutter.git --branch 3.22.0 --depth 1 $HOME/flutter
+          # 1. Clone đúng version
+          git clone https://github.com/flutter/flutter.git --branch 3.22.0 --depth 1
 
-      # 3. Thiết lập PATH để ưu tiên Flutter vừa clone
-      - name: Add Flutter to PATH
-        run: |
-          echo "$HOME/flutter/bin" >> $GITHUB_PATH
-          echo "$HOME/flutter/bin/cache/dart-sdk/bin" >> $GITHUB_PATH
+          # 2. Prepend vào PATH để override Flutter có sẵn
+          export PATH="$PWD/flutter/bin:$PATH"
 
-      # 4. Precache để có đầy đủ công cụ cho web
-      - name: Precache Flutter artifacts
-        run: flutter precache --web
+          # 3. Xác nhận version (phải ra Flutter 3.22.0 • Dart 3.4.0)
+          flutter --version
 
-      # 5. Kiểm tra version đảm bảo đúng Dart 3.4.0
-      - name: Check Flutter & Dart version
-        run: flutter --version
+          # 4. Lấy dependencies
+          flutter pub get
 
-      # 6. Lấy dependencies
-      - name: Install dependencies
-        run: flutter pub get
+          # 5. Build web release
+          flutter build web --release
 
-      # 7. Build web release
-      - name: Build Flutter Web
-        run: flutter build web --release
-
-      # 8. Deploy lên GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
