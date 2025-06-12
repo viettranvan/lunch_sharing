@@ -10,29 +10,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v3
 
-      - name: Clone Flutter 3.22.0 and build
-        shell: bash
-        run: |
-          # 1. Clone đúng version
-          git clone https://github.com/flutter/flutter.git --branch 3.22.0 --depth 1
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.32.3' # thay bằng version bạn dùng
 
-          # 2. Prepend vào PATH để override Flutter có sẵn
-          export PATH="$PWD/flutter/bin:$PATH"
-
-          # 3. Xác nhận version (phải ra Flutter 3.22.0 • Dart 3.4.0)
-          flutter --version
-
-          # 4. Lấy dependencies
-          flutter pub get
-
-          # 5. Build web release
-          flutter build web --release
+      - run: flutter build web
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: build/web
+          publish_dir: ./build/web
+          # publish_branch: deploy-web # nếu bạn muốn deploy vào branch khác ngoài gh-pages 
