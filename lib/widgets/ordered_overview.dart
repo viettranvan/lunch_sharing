@@ -55,7 +55,6 @@ class _OrderedOverviewState extends State<OrderedOverview> {
           id: '',
           actualPrice: 0.0,
           isPaid: false,
-          itemPrice: 0.0,
           name: userName,
           percentage: 0.0,
         ),

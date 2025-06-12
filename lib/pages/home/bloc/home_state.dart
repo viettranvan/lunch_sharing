@@ -5,18 +5,18 @@ class HomeState extends Equatable {
     this.isLoading = false,
     this.errorMessage = '',
     this.invoices = const [],
-    required this.startDate,
-    required this.endDate,
+     this.startDate,
+     this.endDate,
   });
 
   final bool isLoading;
   final String errorMessage;
   final List<Invoices> invoices;
-  final DateTime startDate;
-  final DateTime endDate;
+  final DateTime? startDate;
+  final DateTime? endDate;
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
     isLoading,
     errorMessage,
     invoices,

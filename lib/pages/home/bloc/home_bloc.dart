@@ -11,11 +11,11 @@ part 'home_state.dart';
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   InvoiceService invoiceService = InvoiceService();
 
-  HomeBloc({required this.invoiceService})
-    : super(HomeState(startDate: DateTime.now(), endDate: DateTime.now())) {
+  HomeBloc({required this.invoiceService}) : super(HomeState()) {
     on<InitialData>(_onInitial);
     on<OnChangeRangeDate>(_onChangeRangeDate);
     on<FetchInvoices>(_onFetchInvoice);
+    on<ClearFilter>(_onClearFilter);
   }
 
   FutureOr<void> _onInitial(InitialData event, Emitter<HomeState> emit) {
@@ -55,5 +55,19 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   ) {
     emit(state.copyWith(startDate: event.startDate, endDate: event.endDate));
     add(FetchInvoices(startDate: event.startDate, endDate: event.endDate));
+  }
+
+  FutureOr<void> _onClearFilter(ClearFilter event, Emitter<HomeState> emit) {
+    emit(
+      HomeState(
+        isLoading: false,
+        errorMessage: '',
+        invoices: state.invoices,
+        startDate: null,
+        endDate: null,
+      ),
+    );
+
+    add(FetchInvoices());
   }
 }

@@ -40,36 +40,50 @@ class _HomePageState extends State<HomePage> {
                       },
                     );
                   },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 5,
-                    ),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey, width: 0.5),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.calendar_month),
-                        const SizedBox(width: 5),
-                        Text(
-                          (state.startDate.difference(DateTime.now()).inDays ==
-                                      0 &&
-                                  state.endDate
-                                          .difference(DateTime.now())
-                                          .inDays ==
-                                      0)
-                              ? "Select a range"
-                              : '${state.startDate.jiffyFormatToString('dd/MM/yyyy')} - ${state.endDate.jiffyFormatToString('dd/MM/yyyy')}',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 5,
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey, width: 0.5),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.calendar_month),
+                            const SizedBox(width: 5),
+                            Text(
+                              (state.startDate == null && state.endDate == null)
+                                  ? "Select a range"
+                                  : '${state.startDate!.jiffyFormatToString('dd/MM/yyyy')} - ${state.endDate!.jiffyFormatToString('dd/MM/yyyy')}',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Visibility(
+                        visible:
+                            state.startDate != null && state.endDate != null,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: IconButton(
+                            onPressed: () {
+                              context.read<HomeBloc>().add(const ClearFilter());
+                            },
+                            icon: Icon(Icons.filter_alt_off_sharp),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(width: 20),
+                    ],
                   ),
                 );
               },

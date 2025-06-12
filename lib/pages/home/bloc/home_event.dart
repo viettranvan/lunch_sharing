@@ -32,3 +32,10 @@ class FetchInvoices extends HomeEvent {
   @override
   List<Object?> get props => [startDate, endDate];
 }
+
+class ClearFilter extends HomeEvent {
+  const ClearFilter();
+
+  @override
+  List<Object> get props => [];
+}

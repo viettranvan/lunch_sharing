@@ -21,7 +21,7 @@ class InvoiceService {
         invoiceSnap = await _firestore
             .collection('invoices')
             .where('createdAt', isGreaterThanOrEqualTo: startDate)
-            .where('createdAt', isLessThanOrEqualTo: endDate)
+            .where('createdAt', isLessThanOrEqualTo: DateTime(endDate!.year, endDate.month,endDate.day, 23, 59, 59))
             .orderBy('createdAt', descending: true)
             .get();
       }
