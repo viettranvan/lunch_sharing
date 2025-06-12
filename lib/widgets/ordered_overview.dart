@@ -36,7 +36,7 @@ class _OrderedOverviewState extends State<OrderedOverview> {
         }
       }
 
-      for (final user in users) {
+      for (final user in List<String>.from(users)) {
         if (buildFinal(user, widget.invoices) == 0) {
           users.remove(user);
         }
