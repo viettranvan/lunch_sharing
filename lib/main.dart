@@ -12,7 +12,6 @@ Future<void> main() async {
   GoRouter.optionURLReflectsImperativeAPIs = true;
   WidgetsFlutterBinding.ensureInitialized();
 
-  usePathUrlStrategy();
   setUrlStrategy(HashUrlStrategy());
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);

@@ -40,8 +40,8 @@ class _MarkPaidPageState extends State<MarkPaidPage> {
                       endDate: state.endDate,
                       onRangeDateSelected: (start, end) {
                         context.read<MarkPaidBloc>().add(
-                          OnChangeRangeDate(startDate: start, endDate: end),
-                        );
+                              OnChangeRangeDate(startDate: start, endDate: end),
+                            );
                       },
                     );
                   },
@@ -79,8 +79,8 @@ class _MarkPaidPageState extends State<MarkPaidPage> {
                 ),
               ],
             ),
-
             body: ListView.separated(
+              padding: EdgeInsets.only(bottom: 30),
               itemCount: state.invoices.length,
               separatorBuilder: (context, index) => const SizedBox(height: 16),
               itemBuilder: (context, index) {
@@ -92,8 +92,8 @@ class _MarkPaidPageState extends State<MarkPaidPage> {
                   ordered: order.orderers,
                   markPaidCallback: (id) async {
                     context.read<MarkPaidBloc>().add(
-                      MarkUserAsPaid(invoiceId: order.id, ordererId: id),
-                    );
+                          MarkUserAsPaid(invoiceId: order.id, ordererId: id),
+                        );
                   },
                 );
               },

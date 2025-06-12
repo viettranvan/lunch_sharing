@@ -24,7 +24,6 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Lunch Sharing'),
-
           actions: [
             BlocBuilder<HomeBloc, HomeState>(
               builder: (context, state) {
@@ -36,8 +35,8 @@ class _HomePageState extends State<HomePage> {
                       endDate: state.endDate,
                       onRangeDateSelected: (start, end) {
                         context.read<HomeBloc>().add(
-                          OnChangeRangeDate(startDate: start, endDate: end),
-                        );
+                              OnChangeRangeDate(startDate: start, endDate: end),
+                            );
                       },
                     );
                   },
@@ -95,6 +94,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 Expanded(
                   child: ListView.separated(
+                    padding: EdgeInsets.only(bottom: 30),
                     itemCount: state.invoices.length,
                     separatorBuilder: (context, index) =>
                         const SizedBox(height: 16),
