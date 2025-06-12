@@ -27,5 +27,5 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build/web
+          publish_dir: build/web
           # publish_branch: deploy-web # nếu bạn muốn deploy vào branch khác ngoài gh-pages 
