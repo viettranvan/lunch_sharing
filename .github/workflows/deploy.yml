@@ -10,32 +10,40 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Bước 1: Checkout source code
-      - name: Checkout Repository
+      # 1. Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Bước 2: Tải Flutter 3.22.0 từ source chính thức
-      - name: Install Flutter 3.22.0
+      # 2. Clone đúng Flutter 3.22.0
+      - name: Clone Flutter SDK
         run: |
-          git clone https://github.com/flutter/flutter.git --branch 3.22.0 --depth 1
-          echo "$GITHUB_WORKSPACE/flutter/bin" >> $GITHUB_PATH
+          git clone https://github.com/flutter/flutter.git --branch 3.22.0 --depth 1 $HOME/flutter
 
-      # Bước 3: Kiểm tra version đã đúng chưa
-      - name: Flutter Version
+      # 3. Thiết lập PATH để ưu tiên Flutter vừa clone
+      - name: Add Flutter to PATH
+        run: |
+          echo "$HOME/flutter/bin" >> $GITHUB_PATH
+          echo "$HOME/flutter/bin/cache/dart-sdk/bin" >> $GITHUB_PATH
+
+      # 4. Precache để có đầy đủ công cụ cho web
+      - name: Precache Flutter artifacts
+        run: flutter precache --web
+
+      # 5. Kiểm tra version đảm bảo đúng Dart 3.4.0
+      - name: Check Flutter & Dart version
         run: flutter --version
 
-      # Bước 4: Cài dependencies
+      # 6. Lấy dependencies
       - name: Install dependencies
         run: flutter pub get
 
-      # Bước 5: Build Flutter Web
+      # 7. Build web release
       - name: Build Flutter Web
         run: flutter build web --release
 
-      # Bước 6: Deploy lên GitHub Pages (nhánh gh-pages)
+      # 8. Deploy lên GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build/web
-          # publish_branch: deploy-web # (mặc định không truyền gì thì sẽ là gh-pages) nếu bạn muốn deploy vào branch khác ngoài gh-pages )
+          publish_dir: build/web
