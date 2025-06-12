@@ -50,7 +50,7 @@ class InvoiceService {
         "storeName": storeName,
         "paidAmount": paidAmount,
         "createdAt": Timestamp.fromDate(date),
-        // "orderers": orderers.map((e) => e.toJson()).toList(),
+        "orderers": orderers.map((e) => e.toJson()).toList(),
       };
 
       await _firestore.collection('invoices').add(newInvoiceData);
@@ -93,50 +93,5 @@ class InvoiceService {
       log('Lỗi khi đánh dấu đã thanh toán: $e');
       return false;
     }
-  }
-
-  // Hàm để đọc tất cả hóa đơn (dưới dạng stream để tự động cập nhật UI)
-  // Stream<QuerySnapshot> getInvoicesStream({
-  //   required DateTime startDate,
-  //   required DateTime endDate,
-  // }) {
-  //   try {
-  //     if (startDate.difference(DateTime.now()).inDays == 0 &&
-  //         endDate.difference(DateTime.now()).inDays == 0) {
-  //       return _firestore
-  //           .collection('invoices')
-  //           .orderBy('createdAt', descending: true)
-  //           .snapshots();
-  //     }
-
-  //     return _firestore
-  //         .collection('invoices')
-  //         .where('createdAt', isGreaterThanOrEqualTo: startDate)
-  //         .where('createdAt', isLessThanOrEqualTo: endDate)
-  //         .orderBy('createdAt', descending: true)
-  //         .snapshots();
-  //   } catch (e) {
-  //     log(e.toString());
-
-  //     rethrow;
-  //   }
-  // }
-
-  // Hàm để đọc các hóa đơn trong một ngày cụ thể
-  Future<List<QueryDocumentSnapshot>> getInvoicesByDate(DateTime date) async {
-    // Xác định thời gian bắt đầu và kết thúc của ngày
-    DateTime startDate = DateTime(date.year, date.month, date.day);
-    DateTime endDate = DateTime(date.year, date.month, date.day, 23, 59, 59);
-
-    QuerySnapshot querySnapshot = await _firestore
-        .collection('invoices')
-        .where(
-          'createdAt',
-          isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
-        )
-        .where('createdAt', isLessThanOrEqualTo: Timestamp.fromDate(endDate))
-        .get();
-
-    return querySnapshot.docs;
   }
 }

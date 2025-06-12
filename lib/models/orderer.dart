@@ -8,7 +8,7 @@ class Orderers extends Equatable {
   final String name;
   final double percentage;
   const Orderers({
-    this.id = '',
+    required this.id,
     this.actualPrice = 0,
     this.isPaid = false,
     this.itemPrice = 0,
@@ -31,17 +31,6 @@ class Orderers extends Equatable {
       itemPrice: itemPrice ?? this.itemPrice,
       name: name ?? this.name,
       percentage: percentage ?? this.percentage,
-    );
-  }
-
-  Orderers calculatePercentage(double totalPrice) {
-    return Orderers(
-      id: id,
-      name: name,
-      itemPrice: itemPrice,
-      isPaid: isPaid,
-      actualPrice: actualPrice,
-      percentage: (itemPrice / totalPrice),
     );
   }
 

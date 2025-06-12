@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:lunch_sharing/services/user_order_service.dart';
 
 class AddUserDrawer extends StatefulWidget {
-  const AddUserDrawer({super.key});
+  const AddUserDrawer({super.key, required this.onUserAddCallback});
+
+  final Function(String) onUserAddCallback;
 
   @override
   State<AddUserDrawer> createState() => _AddUserDrawerState();
@@ -34,24 +35,12 @@ class _AddUserDrawerState extends State<AddUserDrawer> {
               borderSide: BorderSide(color: Colors.grey.withValues(alpha: 0.6)),
             ),
           ),
-          onChanged: (value) {
-            // Implement search functionality here
-          },
         ),
         const SizedBox(height: 20),
         InkWell(
           onTap: () async {
-            final sts = await UserOrderService().addUser(
-              userName: _userController.text,
-            );
-            if (sts && context.mounted) {
-              _userController.clear();
-              Navigator.pop(context);
-            } else if (context.mounted) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text('Failed to add user')));
-            }
+            widget.onUserAddCallback.call(_userController.text);
+            Navigator.pop(context);
           },
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
