@@ -21,7 +21,9 @@ class InvoiceService {
         invoiceSnap = await _firestore
             .collection('invoices')
             .where('createdAt', isGreaterThanOrEqualTo: startDate)
-            .where('createdAt', isLessThanOrEqualTo: DateTime(endDate!.year, endDate.month,endDate.day, 23, 59, 59))
+            .where('createdAt',
+                isLessThanOrEqualTo: DateTime(
+                    endDate!.year, endDate.month, endDate.day, 23, 59, 59))
             .orderBy('createdAt', descending: true)
             .get();
       }
@@ -62,14 +64,24 @@ class InvoiceService {
     }
   }
 
+  Future<bool> deleteInvoice(String invoiceId) async {
+    try {
+      await _firestore.collection('invoices').doc(invoiceId).delete();
+      log('Xóa hóa đơn thành công!');
+      return true;
+    } catch (e) {
+      log('Lỗi khi xóa hóa đơn: $e');
+      return false;
+    }
+  }
+
   Future<bool> markPaid({
     required String invoiceId,
     required String ordererId,
   }) async {
     try {
-      final invoiceRef = FirebaseFirestore.instance
-          .collection('invoices')
-          .doc(invoiceId);
+      final invoiceRef =
+          FirebaseFirestore.instance.collection('invoices').doc(invoiceId);
 
       final snapshot = await invoiceRef.get();
       if (!snapshot.exists) {

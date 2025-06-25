@@ -27,6 +27,15 @@ class MarkUserAsPaid extends MarkPaidEvent {
   List<Object?> get props => [ordererId, invoiceId];
 }
 
+class DeleteInvoice extends MarkPaidEvent {
+  final String invoiceId;
+
+  const DeleteInvoice({required this.invoiceId});
+
+  @override
+  List<Object?> get props => [invoiceId];
+}
+
 class OnChangeRangeDate extends MarkPaidEvent {
   final DateTime startDate;
   final DateTime endDate;

@@ -9,6 +9,7 @@ class OrderedTableAction extends StatelessWidget {
     required this.paidAmount,
     required this.ordered,
     this.markPaidCallback,
+    this.deleteCallback,
   });
 
   final String date;
@@ -16,6 +17,7 @@ class OrderedTableAction extends StatelessWidget {
   final double paidAmount;
   final List<Orderers> ordered;
   final Function(String)? markPaidCallback;
+  final VoidCallback? deleteCallback;
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +57,36 @@ class OrderedTableAction extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 10),
+            IconButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (_) {
+                    return AlertDialog(
+                      content:
+                          Text('Bạn có chắc chắn muốn xóa hóa đơn này không?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text('Hủy'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            deleteCallback?.call();
+                          },
+                          child: Text('Xóa'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              icon: Icon(Icons.delete_forever),
+            ),
+            const SizedBox(width: 10),
           ],
         ),
         const SizedBox(height: 10),
@@ -69,8 +101,7 @@ class OrderedTableAction extends StatelessWidget {
             4: const FlexColumnWidth(),
             5: const FlexColumnWidth(),
           },
-          children:
-              [
+          children: [
                 TableRow(
                   decoration: BoxDecoration(
                     color: Colors.blue.withValues(alpha: 0.7),
@@ -152,7 +183,6 @@ class OrderedTableAction extends StatelessWidget {
                     // * Original Price
                     Text(
                       ordered[index].itemPrice.toString(),
-
                       textAlign: TextAlign.center,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -160,7 +190,6 @@ class OrderedTableAction extends StatelessWidget {
                     // * Percentage
                     Text(
                       '${(ordered[index].percentage * 100).toStringAsFixed(2)}%',
-
                       textAlign: TextAlign.center,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -168,7 +197,6 @@ class OrderedTableAction extends StatelessWidget {
                     // * Actual Price
                     Text(
                       ordered[index].actualPrice.toStringAsFixed(2),
-
                       textAlign: TextAlign.center,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -188,7 +216,6 @@ class OrderedTableAction extends StatelessWidget {
                             fontSize: 16,
                             color: Colors.blue,
                             fontWeight: FontWeight.bold,
-
                             decoration: TextDecoration.underline,
                           ),
                         ),

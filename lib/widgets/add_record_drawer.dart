@@ -19,9 +19,8 @@ class _AddRecordDrawerState extends State<AddRecordDrawer> {
 
   @override
   void initState() {
-    orderers = widget.users
-        .map((e) => Orderers(id: Uuid().v4(), name: e))
-        .toList();
+    orderers =
+        widget.users.map((e) => Orderers(id: Uuid().v4(), name: e)).toList();
     super.initState();
   }
 
@@ -110,7 +109,6 @@ class _AddRecordDrawerState extends State<AddRecordDrawer> {
                     style: TextStyle(fontSize: 16, color: Colors.black54),
                   ),
                 ),
-
                 IconButton(
                   padding: EdgeInsets.symmetric(horizontal: 20),
                   onPressed: () {
@@ -140,10 +138,8 @@ class _AddRecordDrawerState extends State<AddRecordDrawer> {
             ),
           ),
         ),
-
         Visibility(
           visible: selected.isNotEmpty,
-
           child: InkWell(
             onTap: () {
               bool isAnyEmpty = selected.any((e) => e.itemPrice == 0);

@@ -19,7 +19,7 @@ class AddRecordBloc extends Bloc<AddRecordEvent, AddRecordState> {
   final TextEditingController amountController = TextEditingController();
 
   AddRecordBloc({required this.invoiceService, required this.userOrderService})
-    : super(AddRecordState(date: DateTime.now())) {
+      : super(AddRecordState(date: DateTime.now())) {
     on<FetchUsers>(_onFetchUsers);
     on<AddNewUser>(_onAddNewUser);
     on<UpdateStateValue>(_onUpdateStateValue);

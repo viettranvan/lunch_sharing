@@ -90,6 +90,11 @@ class _MarkPaidPageState extends State<MarkPaidPage> {
                   storeName: order.storeName,
                   paidAmount: order.paidAmount,
                   ordered: order.orderers,
+                  deleteCallback: () {
+                    context.read<MarkPaidBloc>().add(
+                          DeleteInvoice(invoiceId: order.id),
+                        );
+                  },
                   markPaidCallback: (id) async {
                     context.read<MarkPaidBloc>().add(
                           MarkUserAsPaid(invoiceId: order.id, ordererId: id),

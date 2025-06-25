@@ -73,7 +73,6 @@ class _AddRecordPageState extends State<AddRecordPage> {
                 ),
               ],
             ),
-
             body: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Column(
@@ -89,7 +88,6 @@ class _AddRecordPageState extends State<AddRecordPage> {
                     ),
                   ),
                   const SizedBox(height: 20),
-
                   Wrap(
                     crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
@@ -145,7 +143,6 @@ class _AddRecordPageState extends State<AddRecordPage> {
                               width: 1,
                             ),
                           ),
-
                           child: Text(
                             state.date.jiffyFormatToString('EEE, dd/MM/yyyy'),
                           ),
@@ -167,7 +164,6 @@ class _AddRecordPageState extends State<AddRecordPage> {
                             2: const FlexColumnWidth(),
                             3: const FlexColumnWidth(),
                           },
-
                           children: [
                             TableRow(
                               decoration: BoxDecoration(
@@ -226,7 +222,8 @@ class _AddRecordPageState extends State<AddRecordPage> {
                                 2: const FlexColumnWidth(),
                                 3: const FlexColumnWidth(),
                               },
-                              children: List.generate(state.orderers.length + 1, (
+                              children:
+                                  List.generate(state.orderers.length + 1, (
                                 index,
                               ) {
                                 if (index == state.orderers.length) {

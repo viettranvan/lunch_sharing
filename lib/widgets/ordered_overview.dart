@@ -109,7 +109,6 @@ class _OrderedOverviewState extends State<OrderedOverview> {
           decoration: BoxDecoration(
             color: index.isEven ? Colors.grey.withValues(alpha: 0.1) : null,
           ),
-
           children: [
             // * Name
             Padding(

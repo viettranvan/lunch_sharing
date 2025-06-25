@@ -9,10 +9,8 @@ class UserOrderService {
     List<String> users = [];
 
     try {
-      DocumentSnapshot docSnapshot = await _firestore
-          .collection('userOrder')
-          .doc('userList')
-          .get();
+      DocumentSnapshot docSnapshot =
+          await _firestore.collection('userOrder').doc('userList').get();
 
       if (docSnapshot.exists) {
         users = List<String>.from(docSnapshot.get('users') as List);
@@ -28,9 +26,8 @@ class UserOrderService {
 
   Future<bool> addUser({required String userName}) async {
     try {
-      DocumentReference docRef = _firestore
-          .collection('userOrder')
-          .doc('userList');
+      DocumentReference docRef =
+          _firestore.collection('userOrder').doc('userList');
       await docRef.update({
         'users': FieldValue.arrayUnion([userName]),
       });

@@ -66,9 +66,7 @@ class OrderedTable extends StatelessWidget {
             3: const FlexColumnWidth(),
             4: const FlexColumnWidth(),
           },
-
-          children:
-              [
+          children: [
                 TableRow(
                   decoration: BoxDecoration(
                     color: Colors.blue.withValues(alpha: 0.7),
@@ -129,7 +127,6 @@ class OrderedTable extends StatelessWidget {
                       const SizedBox(),
                       Text(
                         'Total: ${ordered.fold(0.0, (sum, item) => sum + item.itemPrice)}',
-
                         textAlign: TextAlign.center,
                         maxLines: 1,
                         style: TextStyle(
@@ -175,7 +172,6 @@ class OrderedTable extends StatelessWidget {
                     // * Original Price
                     Text(
                       ordered[index].itemPrice.toString(),
-
                       textAlign: TextAlign.center,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -183,7 +179,6 @@ class OrderedTable extends StatelessWidget {
                     // * Percentage
                     Text(
                       '${(ordered[index].percentage * 100).toStringAsFixed(2)}%',
-
                       textAlign: TextAlign.center,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -191,7 +186,6 @@ class OrderedTable extends StatelessWidget {
                     // * Actual Price
                     Text(
                       ordered[index].actualPrice.toStringAsFixed(2),
-
                       textAlign: TextAlign.center,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,

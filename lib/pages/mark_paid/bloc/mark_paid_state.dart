@@ -17,12 +17,12 @@ class MarkPaidState extends Equatable {
 
   @override
   List<Object> get props => [
-    isLoading,
-    errorMessage,
-    invoices,
-    startDate,
-    endDate,
-  ];
+        isLoading,
+        errorMessage,
+        invoices,
+        startDate,
+        endDate,
+      ];
 
   MarkPaidState copyWith({
     bool? isLoading,

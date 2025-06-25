@@ -5,8 +5,8 @@ class HomeState extends Equatable {
     this.isLoading = false,
     this.errorMessage = '',
     this.invoices = const [],
-     this.startDate,
-     this.endDate,
+    this.startDate,
+    this.endDate,
   });
 
   final bool isLoading;
@@ -17,12 +17,12 @@ class HomeState extends Equatable {
 
   @override
   List<Object?> get props => [
-    isLoading,
-    errorMessage,
-    invoices,
-    startDate,
-    endDate,
-  ];
+        isLoading,
+        errorMessage,
+        invoices,
+        startDate,
+        endDate,
+      ];
 
   HomeState copyWith({
     bool? isLoading,

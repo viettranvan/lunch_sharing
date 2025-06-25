@@ -76,7 +76,6 @@ class __DateRangePickerViewState extends State<_DateRangePickerView> {
                   }
                 });
               },
-
               onSubmit: (value) {
                 if (value == null) return;
                 if (value is DateTime) {

@@ -19,13 +19,13 @@ class AddRecordState extends Equatable {
 
   @override
   List<Object> get props => [
-    isLoading,
-    errorMessage,
-    users,
-    date,
-    orderers,
-    discrepancy,
-  ];
+        isLoading,
+        errorMessage,
+        users,
+        date,
+        orderers,
+        discrepancy,
+      ];
 
   AddRecordState copyWith({
     bool? isLoading,
