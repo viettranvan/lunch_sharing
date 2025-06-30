@@ -18,6 +18,9 @@ class MarkPaidBloc extends Bloc<MarkPaidEvent, MarkPaidState> {
     on<MarkUserAsPaid>(_onMarkUserAsPaid);
     on<DeleteInvoice>(_onDeleteInvoice);
     on<OnChangeRangeDate>(_onChangeRangeDate);
+    on<ToggleShowPaidInvoices>((event, emit) {
+      emit(state.copyWith(showPaidInvoices: !state.showPaidInvoices));
+    });
   }
 
   FutureOr<void> _onFetchInvoices(

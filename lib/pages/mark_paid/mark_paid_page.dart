@@ -28,10 +28,37 @@ class _MarkPaidPageState extends State<MarkPaidPage> {
           }
         },
         builder: (context, state) {
+          final listData = state.showPaidInvoices
+              ? state.invoices
+              : state.invoices
+                  .where(
+                      (e) => e.orderers.any((order) => order.isPaid == false))
+                  .toList();
+
           return Scaffold(
             appBar: AppBar(
               title: Text('Mark Paid'),
               actions: [
+                Row(
+                  children: [
+                    Text(
+                      'Show paid invoices',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Checkbox(
+                      value: state.showPaidInvoices,
+                      onChanged: (value) {
+                        context.read<MarkPaidBloc>().add(
+                              ToggleShowPaidInvoices(),
+                            );
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(width: 10),
                 InkWell(
                   onTap: () {
                     DateRangePicker.show(
@@ -81,10 +108,10 @@ class _MarkPaidPageState extends State<MarkPaidPage> {
             ),
             body: ListView.separated(
               padding: EdgeInsets.only(bottom: 30),
-              itemCount: state.invoices.length,
+              itemCount: listData.length,
               separatorBuilder: (context, index) => const SizedBox(height: 16),
               itemBuilder: (context, index) {
-                final order = state.invoices[index];
+                final order = listData[index];
                 return OrderedTableAction(
                   date: formatFirebaseTimestamp(order.createdAt),
                   storeName: order.storeName,

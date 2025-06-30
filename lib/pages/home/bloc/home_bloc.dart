@@ -16,6 +16,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<OnChangeRangeDate>(_onChangeRangeDate);
     on<FetchInvoices>(_onFetchInvoice);
     on<ClearFilter>(_onClearFilter);
+    on<ToggleShowPaidInvoices>((event, emit) {
+      emit(state.copyWith(showPaidInvoices: !state.showPaidInvoices));
+    });
   }
 
   FutureOr<void> _onInitial(InitialData event, Emitter<HomeState> emit) {

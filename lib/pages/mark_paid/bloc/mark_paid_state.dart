@@ -7,6 +7,7 @@ class MarkPaidState extends Equatable {
     this.invoices = const [],
     required this.startDate,
     required this.endDate,
+    this.showPaidInvoices = false,
   });
 
   final bool isLoading;
@@ -14,6 +15,7 @@ class MarkPaidState extends Equatable {
   final List<Invoices> invoices;
   final DateTime startDate;
   final DateTime endDate;
+  final bool showPaidInvoices;
 
   @override
   List<Object> get props => [
@@ -22,6 +24,7 @@ class MarkPaidState extends Equatable {
         invoices,
         startDate,
         endDate,
+        showPaidInvoices,
       ];
 
   MarkPaidState copyWith({
@@ -30,10 +33,12 @@ class MarkPaidState extends Equatable {
     List<Invoices>? invoices,
     DateTime? startDate,
     DateTime? endDate,
+    bool? showPaidInvoices,
   }) {
     return MarkPaidState(
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
+      showPaidInvoices: showPaidInvoices ?? this.showPaidInvoices,
       isLoading: isLoading ?? this.isLoading,
       errorMessage: errorMessage ?? this.errorMessage,
       invoices: invoices ?? this.invoices,

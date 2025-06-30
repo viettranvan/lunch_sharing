@@ -7,6 +7,7 @@ class HomeState extends Equatable {
     this.invoices = const [],
     this.startDate,
     this.endDate,
+    this.showPaidInvoices = false,
   });
 
   final bool isLoading;
@@ -14,6 +15,7 @@ class HomeState extends Equatable {
   final List<Invoices> invoices;
   final DateTime? startDate;
   final DateTime? endDate;
+  final bool showPaidInvoices;
 
   @override
   List<Object?> get props => [
@@ -22,6 +24,7 @@ class HomeState extends Equatable {
         invoices,
         startDate,
         endDate,
+        showPaidInvoices,
       ];
 
   HomeState copyWith({
@@ -30,6 +33,7 @@ class HomeState extends Equatable {
     List<Invoices>? invoices,
     DateTime? startDate,
     DateTime? endDate,
+    bool? showPaidInvoices,
   }) {
     return HomeState(
       startDate: startDate ?? this.startDate,
@@ -37,6 +41,7 @@ class HomeState extends Equatable {
       isLoading: isLoading ?? this.isLoading,
       errorMessage: errorMessage ?? this.errorMessage,
       invoices: invoices ?? this.invoices,
+      showPaidInvoices: showPaidInvoices ?? this.showPaidInvoices,
     );
   }
 }

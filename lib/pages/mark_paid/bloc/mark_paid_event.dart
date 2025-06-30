@@ -45,3 +45,5 @@ class OnChangeRangeDate extends MarkPaidEvent {
   @override
   List<Object> get props => [startDate, endDate];
 }
+
+class ToggleShowPaidInvoices extends MarkPaidEvent {}

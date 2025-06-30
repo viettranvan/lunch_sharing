@@ -43,6 +43,26 @@ class _HomePageState extends State<HomePage> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      Row(
+                        children: [
+                          Text(
+                            'Show paid invoices',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Checkbox(
+                            value: state.showPaidInvoices,
+                            onChanged: (value) {
+                              context.read<HomeBloc>().add(
+                                    ToggleShowPaidInvoices(),
+                                  );
+                            },
+                          ),
+                        ],
+                      ),
+                      const SizedBox(width: 10),
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 10,
@@ -99,6 +119,12 @@ class _HomePageState extends State<HomePage> {
             }
           },
           builder: (context, state) {
+            final listData = state.showPaidInvoices
+                ? state.invoices
+                : state.invoices
+                    .where(
+                        (e) => e.orderers.any((order) => order.isPaid == false))
+                    .toList();
             return Column(
               children: [
                 OrderedOverview(invoices: state.invoices),
@@ -109,11 +135,11 @@ class _HomePageState extends State<HomePage> {
                 Expanded(
                   child: ListView.separated(
                     padding: EdgeInsets.only(bottom: 30),
-                    itemCount: state.invoices.length,
+                    itemCount: listData.length,
                     separatorBuilder: (context, index) =>
                         const SizedBox(height: 16),
                     itemBuilder: (context, index) {
-                      final order = state.invoices[index];
+                      final order = listData[index];
                       return OrderedTable(
                         date: formatFirebaseTimestamp(order.createdAt),
                         storeName: order.storeName,

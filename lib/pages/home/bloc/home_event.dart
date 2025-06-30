@@ -39,3 +39,5 @@ class ClearFilter extends HomeEvent {
   @override
   List<Object> get props => [];
 }
+
+final class ToggleShowPaidInvoices extends HomeEvent {}
