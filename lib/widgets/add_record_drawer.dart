@@ -104,7 +104,9 @@ class _AddRecordDrawerState extends State<AddRecordDrawer> {
                       });
                     },
                     inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly,
+                      FilteringTextInputFormatter.allow(
+                        RegExp(r'^\d*\.?\d{0,2}'),
+                      ),
                     ],
                     style: TextStyle(fontSize: 16, color: Colors.black54),
                   ),

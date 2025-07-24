@@ -112,7 +112,9 @@ class _AddRecordPageState extends State<AddRecordPage> {
                             UpdateStateValue(orderers: state.orderers),
                           ),
                           inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly,
+                            FilteringTextInputFormatter.allow(
+                              RegExp(r'^\d*\.?\d{0,2}'),
+                            ),
                           ],
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
