@@ -112,8 +112,9 @@ class _AddRecordPageState extends State<AddRecordPage> {
                             UpdateStateValue(orderers: state.orderers),
                           ),
                           inputFormatters: <TextInputFormatter>[
+                            // Allow only numbers and up to two decimal places and negative values
                             FilteringTextInputFormatter.allow(
-                              RegExp(r'^\d*\.?\d{0,2}'),
+                              RegExp(r'^[+-]?\d*\.?\d{0,2}'),
                             ),
                           ],
                           decoration: const InputDecoration(

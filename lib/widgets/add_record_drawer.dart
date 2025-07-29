@@ -105,7 +105,7 @@ class _AddRecordDrawerState extends State<AddRecordDrawer> {
                     },
                     inputFormatters: <TextInputFormatter>[
                       FilteringTextInputFormatter.allow(
-                        RegExp(r'^\d*\.?\d{0,2}'),
+                        RegExp(r'^[+-]?\d*\.?\d{0,2}'),
                       ),
                     ],
                     style: TextStyle(fontSize: 16, color: Colors.black54),

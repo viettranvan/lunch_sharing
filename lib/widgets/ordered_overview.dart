@@ -59,10 +59,10 @@ class _OrderedOverviewState extends State<OrderedOverview> {
           percentage: 0.0,
         ),
       );
-      if (result.isEmpty && orderer.actualPrice > 0 && !orderer.isPaid) {
+      if (result.isEmpty && orderer.actualPrice != 0 && !orderer.isPaid) {
         result += orderer.actualPrice.toStringAsFixed(2);
       } else if (result.isNotEmpty &&
-          orderer.actualPrice > 0 &&
+          orderer.actualPrice != 0 &&
           !orderer.isPaid) {
         result += ' + ${orderer.actualPrice.toStringAsFixed(2)}';
       }
