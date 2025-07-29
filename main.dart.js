@@ -86994,7 +86994,7 @@ i=A.aJ("Price Discrepancy: "+A.q(b.f),k,k,k,k,A.bq(k,k,B.eR,k,k,k,k,k,k,k,k,20,k
 r=A.aJ("Restaurant Name: ",k,k,k,k,k,k,k)
 q=A.cD(k,A.akg(j.ay,B.OM,k,k,k),B.v,k,new A.aa(0,200,0,1/0),k,k,k,k,k)
 p=A.aJ("Total amount paid: ",k,k,k,k,k,k,k)
-o=A.cD(k,A.akg(j.ch,B.OL,A.a([new A.ur(A.de("^\\d*\\.?\\d{0,2}",!0,!1),!0,"")],t.VS),new A.am0(j,b),k),B.v,k,new A.aa(0,200,0,1/0),k,k,k,k,k)
+o=A.cD(k,A.akg(j.ch,B.OL,A.a([new A.ur(A.de("^[+-]?\\d*\\.?\\d{0,2}",!0,!1),!0,"")],t.VS),new A.am0(j,b),k),B.v,k,new A.aa(0,200,0,1/0),k,k,k,k,k)
 n=A.aJ("Select a Date: ",k,k,k,k,k,k,k)
 m=A.hb(10)
 l=A.yL(B.dp.b8(0.6),1)
@@ -87836,7 +87836,7 @@ $2(a,b){return B.f6},
 $S:122}
 A.alP.prototype={
 $2(a,b){var s=null,r=this.a
-return A.eu(A.a([A.up(A.ck(A.aJ(r.e[b].e+":",s,s,s,s,A.bq(s,s,B.W,s,s,s,s,s,s,s,s,16,s,s,B.K,s,s,!0,s,s,s,s,s,s,s,s),s,s),s,s),3),B.cA,A.up(A.akg(s,B.ON,A.a([new A.ur(A.de("^\\d*\\.?\\d{0,2}",!0,!1),!0,"")],t.VS),new A.alK(r,b),A.bq(s,s,B.W,s,s,s,s,s,s,s,s,16,s,s,s,s,s,!0,s,s,s,s,s,s,s,s)),6),A.uK(s,s,A.fV(B.qg,s,s,s),s,s,new A.alL(r,b),new A.ay(20,0,20,0),s,s)],t.p),B.ej,B.at,B.af)},
+return A.eu(A.a([A.up(A.ck(A.aJ(r.e[b].e+":",s,s,s,s,A.bq(s,s,B.W,s,s,s,s,s,s,s,s,16,s,s,B.K,s,s,!0,s,s,s,s,s,s,s,s),s,s),s,s),3),B.cA,A.up(A.akg(s,B.ON,A.a([new A.ur(A.de("^[+-]?\\d*\\.?\\d{0,2}",!0,!1),!0,"")],t.VS),new A.alK(r,b),A.bq(s,s,B.W,s,s,s,s,s,s,s,s,16,s,s,s,s,s,!0,s,s,s,s,s,s,s,s)),6),A.uK(s,s,A.fV(B.qg,s,s,s),s,s,new A.alL(r,b),new A.ay(20,0,20,0),s,s)],t.p),B.ej,B.at,B.af)},
 $S:597}
 A.alK.prototype={
 $1(a){var s=this.a
@@ -88007,8 +88007,8 @@ if(m.TI(n,m.a.c)===0)B.b.F(s,n)}}m.bc(a)},
 akh(a,b){var s,r,q,p
 for(s=J.aY(b),r="";s.v();){q=B.b.HC(s.gO().e,new A.arx(a),new A.ary(a))
 p=r.length===0
-if(p&&q.b>0&&!q.c)r+=B.c.ad(q.b,2)
-else if(!p&&q.b>0&&!q.c)r+=" + "+B.c.ad(q.b,2)}return r},
+if(p&&q.b!==0&&!q.c)r+=B.c.ad(q.b,2)
+else if(!p&&q.b!==0&&!q.c)r+=" + "+B.c.ad(q.b,2)}return r},
 TI(a,b){var s,r,q
 for(s=J.aY(b),r=0;s.v();){q=B.b.HC(s.gO().e,new A.arv(a),new A.arw(a))
 if(!q.c)r+=q.b}return r},
