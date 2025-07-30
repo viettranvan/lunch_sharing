@@ -98,15 +98,15 @@ class _AddRecordDrawerState extends State<AddRecordDrawer> {
                   child: TextField(
                     onChanged: (value) {
                       setState(() {
+                        double result = _calculateExpression(value);
+
                         selected[index] = selected[index].copyWith(
-                          itemPrice: double.tryParse(value) ?? 0,
+                          itemPrice: result,
                         );
                       });
                     },
                     inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.allow(
-                        RegExp(r'^[+-]?\d*\.?\d{0,2}'),
-                      ),
+                      _MathExpressionFormatter(),
                     ],
                     style: TextStyle(fontSize: 16, color: Colors.black54),
                   ),
@@ -185,5 +185,153 @@ class _AddRecordDrawerState extends State<AddRecordDrawer> {
         ),
       ],
     );
+  }
+
+  double _calculateExpression(String expression) {
+    if (expression.isEmpty) return 0.0;
+
+    // Remove trailing operator if exists
+    String cleanExpression = expression;
+    if (cleanExpression.endsWith('+') ||
+        cleanExpression.endsWith('-') ||
+        cleanExpression.endsWith('*') ||
+        cleanExpression.endsWith('/')) {
+      cleanExpression =
+          cleanExpression.substring(0, cleanExpression.length - 1);
+    }
+
+    if (cleanExpression.isEmpty) return 0.0;
+
+    try {
+      // Parse the expression with proper operator precedence
+      return _parseExpression(cleanExpression);
+    } catch (e) {
+      return 0.0;
+    }
+  }
+
+  double _parseExpression(String expression) {
+    // First, handle addition and subtraction (lowest precedence)
+    List<String> addSubTokens = _splitByOperators(expression, ['+', '-']);
+
+    if (addSubTokens.length == 1) {
+      // No addition/subtraction, handle multiplication/division
+      return _parseMultiplyDivide(addSubTokens[0]);
+    }
+
+    double result = _parseMultiplyDivide(addSubTokens[0]);
+
+    for (int i = 1; i < addSubTokens.length; i += 2) {
+      if (i + 1 < addSubTokens.length) {
+        String operator = addSubTokens[i];
+        double operand = _parseMultiplyDivide(addSubTokens[i + 1]);
+
+        if (operator == '+') {
+          result += operand;
+        } else if (operator == '-') {
+          result -= operand;
+        }
+      }
+    }
+
+    return result;
+  }
+
+  double _parseMultiplyDivide(String expression) {
+    // Handle multiplication and division (higher precedence)
+    List<String> mulDivTokens = _splitByOperators(expression, ['*', '/']);
+
+    if (mulDivTokens.length == 1) {
+      // No multiplication/division, just parse the number
+      return double.tryParse(mulDivTokens[0]) ?? 0.0;
+    }
+
+    double result = double.tryParse(mulDivTokens[0]) ?? 0.0;
+
+    for (int i = 1; i < mulDivTokens.length; i += 2) {
+      if (i + 1 < mulDivTokens.length) {
+        String operator = mulDivTokens[i];
+        double operand = double.tryParse(mulDivTokens[i + 1]) ?? 0.0;
+
+        if (operator == '*') {
+          result *= operand;
+        } else if (operator == '/') {
+          if (operand != 0) {
+            result /= operand;
+          } else {
+            return 0.0; // Division by zero
+          }
+        }
+      }
+    }
+
+    return result;
+  }
+
+  List<String> _splitByOperators(String expression, List<String> operators) {
+    List<String> tokens = [];
+    String currentToken = '';
+    bool isFirstCharacter = true;
+
+    for (int i = 0; i < expression.length; i++) {
+      String char = expression[i];
+
+      if (operators.contains(char)) {
+        // Check if this is a negative sign at the beginning
+        if (isFirstCharacter && char == '-') {
+          currentToken += char; // Add minus to the number
+        } else {
+          // Add current token and operator
+          if (currentToken.isNotEmpty) {
+            tokens.add(currentToken);
+            currentToken = '';
+          }
+          tokens.add(char);
+        }
+      } else {
+        currentToken += char;
+      }
+      isFirstCharacter = false;
+    }
+
+    // Add the last token
+    if (currentToken.isNotEmpty) {
+      tokens.add(currentToken);
+    }
+
+    return tokens;
+  }
+}
+
+class _MathExpressionFormatter extends TextInputFormatter {
+  final RegExp _validPattern = RegExp(r'^-?(\d+\.?\d*[\+\-\*\/])*\d*\.?\d*$');
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    // If empty or matches the pattern, allow it
+    if (newValue.text.isEmpty || _validPattern.hasMatch(newValue.text)) {
+      // Additional check to prevent consecutive operators (but allow negative at start)
+      if (_hasConsecutiveOperators(newValue.text)) {
+        return oldValue;
+      }
+      return newValue;
+    }
+
+    // If the new value doesn't match, keep the old value
+    return oldValue;
+  }
+
+  bool _hasConsecutiveOperators(String text) {
+    // Check for consecutive operators like ++, --, +-, -+, **, //, etc.
+    // But allow negative sign at the beginning
+    if (text.startsWith('-')) {
+      // Check for consecutive operators after the first character
+      String remaining = text.substring(1);
+      return RegExp(r'[\+\-\*\/]{2,}').hasMatch(remaining);
+    }
+    return RegExp(r'[\+\-\*\/]{2,}').hasMatch(text);
   }
 }
