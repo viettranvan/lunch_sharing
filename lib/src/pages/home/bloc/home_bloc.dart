@@ -23,6 +23,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     });
     on<MarkInvoicePaid>(_onMarkInvoicePaid);
     on<DeleteInvoice>(_onDeleteInvoice);
+    on<MarkUserAsPaidBulk>(_onMarkUserAsPaidBulk);
   }
 
   FutureOr<void> _onInitial(InitialData event, Emitter<HomeState> emit) {
@@ -140,6 +141,43 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         emit(state.copyWith(
           isLoading: false,
           apiInvoices: updatedInvoices,
+          errorMessage: '',
+        ));
+      } else {
+        emit(state.copyWith(
+          isLoading: false,
+          errorMessage: response.message,
+        ));
+      }
+    } catch (e) {
+      emit(state.copyWith(
+        isLoading: false,
+        errorMessage: e.toString(),
+      ));
+    }
+  }
+
+  FutureOr<void> _onMarkUserAsPaidBulk(
+    MarkUserAsPaidBulk event,
+    Emitter<HomeState> emit,
+  ) async {
+    try {
+      emit(state.copyWith(isLoading: true, errorMessage: ''));
+
+      final response = await homeRepository.markUserAsPaidBulk(
+        userId: event.userId,
+      );
+
+      if (response.isSuccess) {
+        // Refresh the invoices to get updated data
+        final refreshResponse = await homeRepository.getInvoices(
+          startDate: state.startDate,
+          endDate: state.endDate,
+        );
+
+        emit(state.copyWith(
+          isLoading: false,
+          apiInvoices: refreshResponse.data ?? state.apiInvoices,
           errorMessage: '',
         ));
       } else {

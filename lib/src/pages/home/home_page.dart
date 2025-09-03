@@ -22,9 +22,10 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          HomeBloc(homeRepository: HomeRepository(client: DioClient()))
-            ..add(FetchInvoices()),
+      create: (context) => HomeBloc(
+          homeRepository: HomeRepository(
+              client: DioClient(baseUrl: 'http://localhost:3000')))
+        ..add(FetchInvoices()),
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Lunch Sharing'),
@@ -137,7 +138,12 @@ class _HomePageState extends State<HomePage> {
                     .toList();
             return Column(
               children: [
-                OrderedOverview(invoices: state.apiInvoices),
+                OrderedOverview(
+                  invoices: state.apiInvoices,
+                  onMarkPaid: (userId) {
+                    context.read<HomeBloc>().add(MarkUserAsPaidBulk(userId));
+                  },
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: DashedLine(thickness: 2),

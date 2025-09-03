@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:lunch_sharing/src/models/api_models.dart';
 
 class OrderedOverview extends StatefulWidget {
-  const OrderedOverview({super.key, required this.invoices});
+  const OrderedOverview({
+    super.key,
+    required this.invoices,
+    this.onMarkPaid,
+  });
   final List<ApiInvoice> invoices;
+  final Function(int userId)? onMarkPaid;
 
   @override
   State<OrderedOverview> createState() => _OrderedOverviewState();
@@ -90,6 +95,7 @@ class _OrderedOverviewState extends State<OrderedOverview> {
         0: const FlexColumnWidth(),
         1: const FlexColumnWidth(3),
         2: const FlexColumnWidth(),
+        3: const FlexColumnWidth(1.5),
       },
       children: List.generate(users.length, (index) {
         return TableRow(
@@ -127,12 +133,42 @@ class _OrderedOverviewState extends State<OrderedOverview> {
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
             ),
-            Text(
-              'Mark as Paid',
-              textAlign: TextAlign.center,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+            // * Mark as Paid Button
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: buildFinal(users[index], widget.invoices) > 0
+                  ? InkWell(
+                      onTap: () => widget.onMarkPaid?.call(users[index].id),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 6,
+                          horizontal: 12,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.green.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(color: Colors.green, width: 1),
+                        ),
+                        child: const Text(
+                          'Mark as Paid',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12,
+                            color: Colors.green,
+                          ),
+                        ),
+                      ),
+                    )
+                  : const Text(
+                      'No Outstanding',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12,
+                        color: Colors.grey,
+                      ),
+                    ),
             ),
           ],
         );

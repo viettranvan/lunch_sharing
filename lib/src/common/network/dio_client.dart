@@ -21,7 +21,7 @@ class DioClient {
       ),
     );
 
-    // _setupInterceptors();
+    _setupInterceptors();
   }
 
   /// Setup interceptors for logging and error handling

@@ -183,4 +183,26 @@ class HomeRepository {
       );
     }
   }
+
+  /// Mark all invoices of a specific user as paid using bulk API
+  Future<ApiResponse<Map<String, dynamic>>> markUserAsPaidBulk({
+    required int userId,
+  }) async {
+    try {
+      final response = await client.patch<Map<String, dynamic>>(
+        '/invoices/bulk/mark-paid-by-user',
+        data: {
+          'user_id': userId,
+        },
+        fromJson: (data) => data as Map<String, dynamic>,
+      );
+
+      return response;
+    } catch (e) {
+      return ApiResponse<Map<String, dynamic>>.error(
+        message: 'Failed to mark all user invoices as paid: $e',
+        code: HttpStatusCode.internalServerError,
+      );
+    }
+  }
 }

@@ -60,3 +60,12 @@ class DeleteInvoice extends HomeEvent {
   @override
   List<Object> get props => [invoiceId];
 }
+
+class MarkUserAsPaidBulk extends HomeEvent {
+  final int userId;
+
+  const MarkUserAsPaidBulk(this.userId);
+
+  @override
+  List<Object> get props => [userId];
+}
