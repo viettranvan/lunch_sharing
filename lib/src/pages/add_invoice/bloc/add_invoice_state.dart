@@ -1,7 +1,7 @@
-part of 'add_record_bloc.dart';
+part of 'add_invoice_bloc.dart';
 
-class AddRecordState extends Equatable {
-  const AddRecordState({
+class AddInvoiceState extends Equatable {
+  const AddInvoiceState({
     this.isLoading = false,
     this.errorMessage = '',
     this.users = const [],
@@ -27,7 +27,7 @@ class AddRecordState extends Equatable {
         discrepancy,
       ];
 
-  AddRecordState copyWith({
+  AddInvoiceState copyWith({
     bool? isLoading,
     String? errorMessage,
     List<String>? users,
@@ -35,7 +35,7 @@ class AddRecordState extends Equatable {
     List<Orderers>? orderers,
     double? discrepancy,
   }) {
-    return AddRecordState(
+    return AddInvoiceState(
       isLoading: isLoading ?? this.isLoading,
       errorMessage: errorMessage ?? this.errorMessage,
       users: users ?? this.users,

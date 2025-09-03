@@ -3,8 +3,9 @@ part of 'router.dart';
 enum RouterName {
 
   home('/'),
-  addRecord('/add-record'),
+  addInvoice('/add-invoice'),
   markPaid('/mark-paid'),
+  manageUser('/manage-user'),
   ;
 
   final String path;

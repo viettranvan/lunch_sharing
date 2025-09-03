@@ -1,36 +1,28 @@
-part of 'add_record_bloc.dart';
+part of 'add_invoice_bloc.dart';
 
-sealed class AddRecordEvent extends Equatable {
-  const AddRecordEvent();
+sealed class AddInvoiceEvent extends Equatable {
+  const AddInvoiceEvent();
 
   @override
   List<Object?> get props => [];
 }
 
-class FetchUsers extends AddRecordEvent {
+class FetchUsers extends AddInvoiceEvent {
   const FetchUsers();
 
   @override
   List<Object> get props => [];
 }
 
-class AddNewUser extends AddRecordEvent {
-  const AddNewUser({required this.userName});
 
-  final String userName;
-
-  @override
-  List<Object> get props => [userName];
-}
-
-class AddNewRecord extends AddRecordEvent {
+class AddNewRecord extends AddInvoiceEvent {
   const AddNewRecord();
 
   @override
   List<Object> get props => [];
 }
 
-class UpdateStateValue extends AddRecordEvent {
+class UpdateStateValue extends AddInvoiceEvent {
   const UpdateStateValue({
     this.isLoading,
     this.errorMessage,

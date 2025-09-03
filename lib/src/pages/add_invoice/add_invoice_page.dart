@@ -2,27 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:lunch_sharing/pages/add_record/bloc/add_record_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lunch_sharing/services/invoice_service.dart';
-import 'package:lunch_sharing/services/user_order_service.dart';
+import 'package:lunch_sharing/src/pages/add_invoice/bloc/add_invoice_bloc.dart';
+import 'package:lunch_sharing/src/router/router.dart';
 import 'package:lunch_sharing/widgets/index.dart';
 
-class AddRecordPage extends StatefulWidget {
-  const AddRecordPage({super.key});
+class AddInvoicePage extends StatefulWidget {
+  const AddInvoicePage({super.key});
 
   @override
-  State<AddRecordPage> createState() => _AddRecordPageState();
+  State<AddInvoicePage> createState() => _AddInvoicePageState();
 }
 
-class _AddRecordPageState extends State<AddRecordPage> {
+class _AddInvoicePageState extends State<AddInvoicePage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => AddRecordBloc(
+      create: (context) => AddInvoiceBloc(
         invoiceService: InvoiceService(),
-        userOrderService: UserOrderService(),
       )..add(FetchUsers()),
-      child: BlocConsumer<AddRecordBloc, AddRecordState>(
+      child: BlocConsumer<AddInvoiceBloc, AddInvoiceState>(
         listener: (context, state) {
           state.isLoading ? EasyLoading.show() : EasyLoading.dismiss();
           if (state.errorMessage.isNotEmpty) {
@@ -30,7 +30,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
           }
         },
         builder: (context, state) {
-          final bloc = BlocProvider.of<AddRecordBloc>(context);
+          final bloc = BlocProvider.of<AddInvoiceBloc>(context);
           return Scaffold(
             endDrawer: Drawer(
               width: 600,
@@ -48,20 +48,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
               actions: [
                 IconButton(
                   onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (_) {
-                        return AlertDialog(
-                          content: AddUserDrawer(
-                            onUserAddCallback: (userName) {
-                              BlocProvider.of<AddRecordBloc>(
-                                context,
-                              ).add(AddNewUser(userName: userName));
-                            },
-                          ),
-                        );
-                      },
-                    );
+                    context.push(RouterName.manageUser.path);
                   },
                   icon: Icon(Icons.group_add_outlined),
                 ),

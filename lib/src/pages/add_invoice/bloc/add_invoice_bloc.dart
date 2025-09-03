@@ -6,70 +6,27 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:lunch_sharing/models/orderer.dart';
 import 'package:lunch_sharing/services/invoice_service.dart';
-import 'package:lunch_sharing/services/user_order_service.dart';
 
-part 'add_record_event.dart';
-part 'add_record_state.dart';
+part 'add_invoice_event.dart';
+part 'add_invoice_state.dart';
 
-class AddRecordBloc extends Bloc<AddRecordEvent, AddRecordState> {
+class AddInvoiceBloc extends Bloc<AddInvoiceEvent, AddInvoiceState> {
   final InvoiceService invoiceService;
-  final UserOrderService userOrderService;
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController amountController = TextEditingController();
 
-  AddRecordBloc({required this.invoiceService, required this.userOrderService})
-      : super(AddRecordState(date: DateTime.now())) {
+  AddInvoiceBloc({required this.invoiceService})
+      : super(AddInvoiceState(date: DateTime.now())) {
     on<FetchUsers>(_onFetchUsers);
-    on<AddNewUser>(_onAddNewUser);
     on<UpdateStateValue>(_onUpdateStateValue);
     on<AddNewRecord>(_onAddNewRecord);
   }
 
-  FutureOr<void> _onFetchUsers(
-    FetchUsers event,
-    Emitter<AddRecordState> emit,
-  ) async {
-    try {
-      emit(state.copyWith(isLoading: true, errorMessage: ''));
-      final response = await userOrderService.getListUser();
-      emit(state.copyWith(isLoading: false, users: response, errorMessage: ''));
-    } catch (e) {
-      emit(state.copyWith(isLoading: false, errorMessage: e.toString()));
-    }
-  }
-
-  FutureOr<void> _onAddNewUser(
-    AddNewUser event,
-    Emitter<AddRecordState> emit,
-  ) async {
-    try {
-      emit(state.copyWith(isLoading: true, errorMessage: ''));
-      final response = await userOrderService.addUser(userName: event.userName);
-      if (response) {
-        final updatedUsers = [...state.users, event.userName];
-
-        emit(
-          state.copyWith(
-            isLoading: false,
-            users: updatedUsers,
-            errorMessage: '',
-          ),
-        );
-        EasyLoading.showSuccess('Added user successfully!');
-      } else {
-        emit(
-          state.copyWith(isLoading: false, errorMessage: 'Failed to add user.'),
-        );
-      }
-    } catch (e) {
-      emit(state.copyWith(isLoading: false, errorMessage: e.toString()));
-    }
-  }
 
   FutureOr<void> _onUpdateStateValue(
     UpdateStateValue event,
-    Emitter<AddRecordState> emit,
+    Emitter<AddInvoiceState> emit,
   ) {
     List<Orderers>? orderers;
     double? discrepancy;
@@ -107,7 +64,7 @@ class AddRecordBloc extends Bloc<AddRecordEvent, AddRecordState> {
 
   FutureOr<void> _onAddNewRecord(
     AddNewRecord event,
-    Emitter<AddRecordState> emit,
+    Emitter<AddInvoiceState> emit,
   ) async {
     try {
       if (nameController.text.isEmpty) {
@@ -143,5 +100,8 @@ class AddRecordBloc extends Bloc<AddRecordEvent, AddRecordState> {
     } catch (e) {
       emit(state.copyWith(isLoading: false, errorMessage: e.toString()));
     }
+  }
+
+  FutureOr<void> _onFetchUsers(FetchUsers event, Emitter<AddInvoiceState> emit) {
   }
 }
