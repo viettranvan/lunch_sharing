@@ -1,0 +1,122 @@
+import 'dart:async';
+
+import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:lunch_sharing/src/models/api_models.dart';
+import 'package:lunch_sharing/src/pages/add_invoice/bloc/invoice_repository.dart';
+
+part 'add_invoice_event.dart';
+part 'add_invoice_state.dart';
+
+class AddInvoiceBloc extends Bloc<AddInvoiceEvent, AddInvoiceState> {
+  final InvoiceRepository repository;
+
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController amountController = TextEditingController();
+
+  AddInvoiceBloc({required this.repository})
+      : super(AddInvoiceState(date: DateTime.now())) {
+    on<FetchUsers>(_onFetchUsers);
+    on<UpdateStateValue>(_onUpdateStateValue);
+    on<AddNewRecord>(_onAddNewRecord);
+  }
+
+  FutureOr<void> _onUpdateStateValue(
+    UpdateStateValue event,
+    Emitter<AddInvoiceState> emit,
+  ) {
+    List<ApiOrderer>? orderers;
+    double? discrepancy;
+
+    if (event.orderers != null && amountController.text.isNotEmpty) {
+      orderers = [];
+      // Tổng số tiền thực tế đã trả
+      final amountYouPaid = double.tryParse(amountController.text) ?? 0.0;
+
+      // Tổng số tiền thực tế của các orderers trên hóa đơn
+      final totalPrice = event.orderers!.fold(
+        0.0,
+        (sum, item) => sum + item.itemPrice,
+      );
+
+      // Số tiền chênh lệch giữa số tiền bạn đã trả và tổng số tiền thực tế của các orderers
+      discrepancy = amountYouPaid - totalPrice;
+
+      // Cập nhật giá thực tế cho từng orderer dựa trên tỷ lệ phần trăm của họ
+      for (final item in event.orderers!) {
+        final actualPrice = item.itemPrice + discrepancy * item.percentage;
+        orderers.add(item.copyWith(actualPrice: actualPrice));
+      }
+    }
+    emit(
+      state.copyWith(
+        date: event.date,
+        orderers: orderers ?? event.orderers,
+        isLoading: false,
+        errorMessage: '',
+        discrepancy: discrepancy,
+      ),
+    );
+  }
+
+  FutureOr<void> _onAddNewRecord(
+    AddNewRecord event,
+    Emitter<AddInvoiceState> emit,
+  ) async {
+    try {
+      if (nameController.text.isEmpty) {
+        EasyLoading.showError('Please enter a store name.');
+      } else if (amountController.text.isEmpty) {
+        EasyLoading.showError('Please enter a paid amount.');
+      } else if (state.orderers.isEmpty) {
+        EasyLoading.showError('Please add at least one orderer.');
+      } else {
+        // EasyLoading.show();
+
+        final sts = await repository.addInvoice(
+          storeName: nameController.text,
+          paidAmount: double.tryParse(amountController.text) ?? 0.0,
+          createdAt: state.date,
+          orderers: state.orderers
+              .map((orderer) => ApiOrdererRequest(
+                    actualPrice: orderer.actualPrice,
+                    itemPrice: orderer.itemPrice,
+                    percentage: orderer.percentage,
+                    isPaid: orderer.isPaid,
+                    userId: orderer.user.id,
+                  ))
+              .toList(),
+        );
+        if (sts) {
+          nameController.clear();
+          amountController.clear();
+          emit(
+            state.copyWith(
+              isLoading: false,
+              orderers: [],
+              discrepancy: 0.0,
+              date: DateTime.now(),
+              errorMessage: '',
+            ),
+          );
+          EasyLoading.showSuccess('Record added successfully!');
+        }
+      }
+    } catch (e) {
+      emit(state.copyWith(isLoading: false, errorMessage: e.toString()));
+    }
+  }
+
+  FutureOr<void> _onFetchUsers(
+      FetchUsers event, Emitter<AddInvoiceState> emit) async {
+    try {
+      emit(state.copyWith(isLoading: true, errorMessage: ''));
+      final users = await repository.fetchUsers();
+      emit(state.copyWith(isLoading: false, users: users));
+    } catch (e) {
+      emit(state.copyWith(isLoading: false, errorMessage: e.toString()));
+    }
+  }
+}
