@@ -35,7 +35,7 @@ class UpdateStateValue extends AddInvoiceEvent {
   final String? errorMessage;
   final List<String>? users;
   final DateTime? date;
-  final List<Orderers>? orderers;
+  final List<ApiOrderer>? orderers;
 
   @override
   List<Object?> get props => [isLoading, errorMessage, users, date, orderers];

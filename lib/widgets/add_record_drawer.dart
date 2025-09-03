@@ -1,26 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:lunch_sharing/models/index.dart';
-import 'package:uuid/uuid.dart';
+import 'package:lunch_sharing/src/models/api_models.dart';
 
 class AddRecordDrawer extends StatefulWidget {
   const AddRecordDrawer({super.key, this.onConfirm, required this.users});
   final List<String> users;
 
-  final Function(List<Orderers>)? onConfirm;
+  final Function(List<ApiOrderer>)? onConfirm;
   @override
   State<AddRecordDrawer> createState() => _AddRecordDrawerState();
 }
 
 class _AddRecordDrawerState extends State<AddRecordDrawer> {
-  late final List<Orderers> orderers;
-  List<Orderers> selected = [];
+  late final List<ApiOrderer> orderers;
+  List<ApiOrderer> selected = [];
 
   @override
   void initState() {
-    orderers =
-        widget.users.map((e) => Orderers(id: Uuid().v4(), name: e)).toList();
+    orderers = widget.users.map((e) => ApiOrderer.initName(e)).toList();
     super.initState();
   }
 
@@ -54,7 +52,7 @@ class _AddRecordDrawerState extends State<AddRecordDrawer> {
                 margin: EdgeInsets.only(right: 10),
                 padding: EdgeInsets.symmetric(vertical: 10, horizontal: 4),
                 decoration: BoxDecoration(
-                  color: selected.any((item) => item.name == e.name)
+                  color: selected.any((item) => item.user.name == e.user.name)
                       ? Colors.blue.withValues(alpha: 0.7)
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(10),
@@ -63,7 +61,7 @@ class _AddRecordDrawerState extends State<AddRecordDrawer> {
                     width: 1,
                   ),
                 ),
-                child: Text(e.name),
+                child: Text(e.user.name),
               ),
             );
           }).toList(),
@@ -83,7 +81,7 @@ class _AddRecordDrawerState extends State<AddRecordDrawer> {
                   flex: 3,
                   child: Center(
                     child: Text(
-                      '${selected[index].name}:',
+                      '${selected[index].user.name}:',
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.black54,

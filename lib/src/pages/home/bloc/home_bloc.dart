@@ -9,7 +9,6 @@ part 'home_event.dart';
 part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-
   final HomeRepository homeRepository;
 
   HomeBloc({
@@ -22,6 +21,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<ToggleShowPaidInvoices>((event, emit) {
       emit(state.copyWith(showPaidInvoices: !state.showPaidInvoices));
     });
+    on<MarkInvoicePaid>(_onMarkInvoicePaid);
+    on<DeleteInvoice>(_onDeleteInvoice);
   }
 
   FutureOr<void> _onInitial(InitialData event, Emitter<HomeState> emit) {
@@ -48,7 +49,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         endDate: event.endDate,
       );
       emit(
-        state.copyWith(isLoading: false, apiInvoices: response.data, errorMessage: ''),
+        state.copyWith(
+            isLoading: false, apiInvoices: response.data, errorMessage: ''),
       );
     } catch (e) {
       emit(state.copyWith(isLoading: false, errorMessage: e.toString()));
@@ -78,6 +80,79 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     );
 
     add(FetchInvoices());
+  }
 
+  FutureOr<void> _onMarkInvoicePaid(
+    MarkInvoicePaid event,
+    Emitter<HomeState> emit,
+  ) async {
+    try {
+      emit(state.copyWith(isLoading: true, errorMessage: ''));
+
+      final response = await homeRepository.markOrdererAsPaid(
+        invoiceId: event.invoiceId,
+        ordererId: event.ordererId,
+      );
+
+      if (response.isSuccess) {
+        // Update the specific invoice in the list
+        final updatedInvoices = state.apiInvoices.map((invoice) {
+          if (invoice.id == event.invoiceId) {
+            return response.data!;
+          }
+          return invoice;
+        }).toList();
+
+        emit(state.copyWith(
+          isLoading: false,
+          apiInvoices: updatedInvoices,
+          errorMessage: '',
+        ));
+      } else {
+        emit(state.copyWith(
+          isLoading: false,
+          errorMessage: response.message,
+        ));
+      }
+    } catch (e) {
+      emit(state.copyWith(
+        isLoading: false,
+        errorMessage: e.toString(),
+      ));
+    }
+  }
+
+  FutureOr<void> _onDeleteInvoice(
+    DeleteInvoice event,
+    Emitter<HomeState> emit,
+  ) async {
+    try {
+      emit(state.copyWith(isLoading: true, errorMessage: ''));
+
+      final response = await homeRepository.deleteInvoice(event.invoiceId);
+
+      if (response.isSuccess) {
+        // Remove the invoice from the list
+        final updatedInvoices = state.apiInvoices
+            .where((invoice) => invoice.id != event.invoiceId)
+            .toList();
+
+        emit(state.copyWith(
+          isLoading: false,
+          apiInvoices: updatedInvoices,
+          errorMessage: '',
+        ));
+      } else {
+        emit(state.copyWith(
+          isLoading: false,
+          errorMessage: response.message,
+        ));
+      }
+    } catch (e) {
+      emit(state.copyWith(
+        isLoading: false,
+        errorMessage: e.toString(),
+      ));
+    }
   }
 }

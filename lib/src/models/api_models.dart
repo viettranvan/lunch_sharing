@@ -67,6 +67,24 @@ class ApiOrderer extends Equatable {
     required this.user,
   });
 
+  factory ApiOrderer.initName(String userName) {
+    return ApiOrderer(
+      id: 0,
+      actualPrice: 0.0,
+      isPaid: false,
+      itemPrice: 0.0,
+      percentage: 0.0,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+      user: ApiUser(
+        id: 0,
+        name: userName,
+        isActive: true,
+        createdAt: DateTime.now(),
+      ),
+    );
+  }
+
   factory ApiOrderer.empty() {
     return ApiOrderer(
       id: 0,
@@ -87,12 +105,12 @@ class ApiOrderer extends Equatable {
   factory ApiOrderer.fromJson(Map<String, dynamic> json) {
     return ApiOrderer(
       id: json['id'] as int,
-      actualPrice: (json['actualPrice'] as num).toDouble(),
-      isPaid: json['isPaid'] as bool,
-      itemPrice: (json['itemPrice'] as num).toDouble(),
+      actualPrice: (json['actual_price'] as num).toDouble(),
+      isPaid: json['is_paid'] as bool,
+      itemPrice: (json['item_price'] as num).toDouble(),
       percentage: (json['percentage'] as num).toDouble(),
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: DateTime.parse(json['updatedAt'] as String),
+      createdAt: DateTime.parse(json['created_at'] as String),
+      updatedAt: DateTime.parse(json['updated_at'] as String),
       user: ApiUser.fromJson(json['user'] as Map<String, dynamic>),
     );
   }
@@ -100,12 +118,12 @@ class ApiOrderer extends Equatable {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'actualPrice': actualPrice,
-      'isPaid': isPaid,
-      'itemPrice': itemPrice,
+      'actual_price': actualPrice,
+      'is_paid': isPaid,
+      'item_price': itemPrice,
       'percentage': percentage,
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
+      'created_at': createdAt.toIso8601String(),
+      'updated_at': updatedAt.toIso8601String(),
       'user': user.toJson(),
     };
   }
@@ -125,6 +143,28 @@ class ApiOrderer extends Equatable {
   @override
   String toString() =>
       'ApiOrderer(id: $id, user: ${user.name}, isPaid: $isPaid)';
+
+  ApiOrderer copyWith({
+    int? id,
+    double? actualPrice,
+    bool? isPaid,
+    double? itemPrice,
+    double? percentage,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    ApiUser? user,
+  }) {
+    return ApiOrderer(
+      id: id ?? this.id,
+      actualPrice: actualPrice ?? this.actualPrice,
+      isPaid: isPaid ?? this.isPaid,
+      itemPrice: itemPrice ?? this.itemPrice,
+      percentage: percentage ?? this.percentage,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      user: user ?? this.user,
+    );
+  }
 }
 
 /// Invoice model for API response

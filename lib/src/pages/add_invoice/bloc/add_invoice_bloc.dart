@@ -4,31 +4,30 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:lunch_sharing/models/orderer.dart';
-import 'package:lunch_sharing/services/invoice_service.dart';
+import 'package:lunch_sharing/src/models/api_models.dart';
+import 'package:lunch_sharing/src/pages/add_invoice/bloc/invoice_repository.dart';
 
 part 'add_invoice_event.dart';
 part 'add_invoice_state.dart';
 
 class AddInvoiceBloc extends Bloc<AddInvoiceEvent, AddInvoiceState> {
-  final InvoiceService invoiceService;
+  final InvoiceRepository repository;
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController amountController = TextEditingController();
 
-  AddInvoiceBloc({required this.invoiceService})
+  AddInvoiceBloc({required this.repository})
       : super(AddInvoiceState(date: DateTime.now())) {
     on<FetchUsers>(_onFetchUsers);
     on<UpdateStateValue>(_onUpdateStateValue);
     on<AddNewRecord>(_onAddNewRecord);
   }
 
-
   FutureOr<void> _onUpdateStateValue(
     UpdateStateValue event,
     Emitter<AddInvoiceState> emit,
   ) {
-    List<Orderers>? orderers;
+    List<ApiOrderer>? orderers;
     double? discrepancy;
 
     if (event.orderers != null && amountController.text.isNotEmpty) {
@@ -74,9 +73,9 @@ class AddInvoiceBloc extends Bloc<AddInvoiceEvent, AddInvoiceState> {
       } else if (state.orderers.isEmpty) {
         EasyLoading.showError('Please add at least one orderer.');
       } else {
-        EasyLoading.show();
+        // EasyLoading.show();
 
-        final sts = await invoiceService.addInvoice(
+        final sts = await repository.addInvoice(
           storeName: nameController.text,
           paidAmount: double.tryParse(amountController.text) ?? 0.0,
           date: state.date,
@@ -102,6 +101,14 @@ class AddInvoiceBloc extends Bloc<AddInvoiceEvent, AddInvoiceState> {
     }
   }
 
-  FutureOr<void> _onFetchUsers(FetchUsers event, Emitter<AddInvoiceState> emit) {
+  FutureOr<void> _onFetchUsers(
+      FetchUsers event, Emitter<AddInvoiceState> emit) async {
+    try {
+      emit(state.copyWith(isLoading: true, errorMessage: ''));
+      final users = await repository.fetchUsers();
+      emit(state.copyWith(isLoading: false, users: users));
+    } catch (e) {
+      emit(state.copyWith(isLoading: false, errorMessage: e.toString()));
+    }
   }
 }

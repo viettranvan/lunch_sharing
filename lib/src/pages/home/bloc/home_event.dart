@@ -41,3 +41,22 @@ class ClearFilter extends HomeEvent {
 }
 
 final class ToggleShowPaidInvoices extends HomeEvent {}
+
+class MarkInvoicePaid extends HomeEvent {
+  final int invoiceId;
+  final int ordererId;
+
+  const MarkInvoicePaid(this.invoiceId, this.ordererId);
+
+  @override
+  List<Object> get props => [invoiceId, ordererId];
+}
+
+class DeleteInvoice extends HomeEvent {
+  final int invoiceId;
+
+  const DeleteInvoice(this.invoiceId);
+
+  @override
+  List<Object> get props => [invoiceId];
+}

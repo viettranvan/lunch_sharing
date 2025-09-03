@@ -155,6 +155,14 @@ class _HomePageState extends State<HomePage> {
                         storeName: order.storeName,
                         paidAmount: order.paidAmount,
                         ordered: order.orderers,
+                        markPaidCallback: (ordererId) {
+                          context
+                              .read<HomeBloc>()
+                              .add(MarkInvoicePaid(order.id, ordererId));
+                        },
+                        deleteCallback: () {
+                          context.read<HomeBloc>().add(DeleteInvoice(order.id));
+                        },
                       );
                     },
                   ),

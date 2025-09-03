@@ -12,9 +12,9 @@ class AddInvoiceState extends Equatable {
 
   final bool isLoading;
   final String errorMessage;
-  final List<String> users;
+  final List<ApiUser> users;
   final DateTime date;
-  final List<Orderers> orderers;
+  final List<ApiOrderer> orderers;
   final double discrepancy;
 
   @override
@@ -30,9 +30,9 @@ class AddInvoiceState extends Equatable {
   AddInvoiceState copyWith({
     bool? isLoading,
     String? errorMessage,
-    List<String>? users,
+    List<ApiUser>? users,
     DateTime? date,
-    List<Orderers>? orderers,
+    List<ApiOrderer>? orderers,
     double? discrepancy,
   }) {
     return AddInvoiceState(

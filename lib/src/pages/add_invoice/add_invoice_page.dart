@@ -3,8 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lunch_sharing/services/invoice_service.dart';
+import 'package:lunch_sharing/src/common/network/index.dart';
 import 'package:lunch_sharing/src/pages/add_invoice/bloc/add_invoice_bloc.dart';
+import 'package:lunch_sharing/src/pages/add_invoice/bloc/invoice_repository.dart';
 import 'package:lunch_sharing/src/router/router.dart';
 import 'package:lunch_sharing/widgets/index.dart';
 
@@ -20,7 +21,7 @@ class _AddInvoicePageState extends State<AddInvoicePage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => AddInvoiceBloc(
-        invoiceService: InvoiceService(),
+        repository: InvoiceRepository(client: DioClient()),
       )..add(FetchUsers()),
       child: BlocConsumer<AddInvoiceBloc, AddInvoiceState>(
         listener: (context, state) {
@@ -35,7 +36,7 @@ class _AddInvoicePageState extends State<AddInvoicePage> {
             endDrawer: Drawer(
               width: 600,
               child: AddRecordDrawer(
-                users: state.users,
+                users: state.users.map((user) => user.name).toList(),
                 onConfirm: (value) {
                   bloc.add(UpdateStateValue(orderers: value));
                 },
@@ -253,7 +254,7 @@ class _AddInvoicePageState extends State<AddInvoicePage> {
                                   children: [
                                     // * Name
                                     Text(
-                                      state.orderers[index].name,
+                                      state.orderers[index].user.name,
                                       textAlign: TextAlign.center,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,

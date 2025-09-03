@@ -135,7 +135,10 @@ class HomeRepository {
   }) async {
     try {
       final response = await client.patch<ApiInvoice>(
-        '/invoices/$invoiceId/orderers/$ordererId/mark-paid',
+        '/invoices/$invoiceId/orderers/mark-paid',
+        data: {
+          'ordererIds': [ordererId],
+        },
         fromJson: (data) => ApiInvoice.fromJson(data),
       );
 
