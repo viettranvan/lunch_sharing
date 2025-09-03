@@ -2,16 +2,19 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:lunch_sharing/models/invoices.dart';
-import 'package:lunch_sharing/services/invoice_service.dart';
+import 'package:lunch_sharing/src/models/api_models.dart';
+import 'package:lunch_sharing/src/pages/home/bloc/home_repository.dart';
 
 part 'home_event.dart';
 part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  InvoiceService invoiceService = InvoiceService();
 
-  HomeBloc({required this.invoiceService}) : super(HomeState()) {
+  final HomeRepository homeRepository;
+
+  HomeBloc({
+    required this.homeRepository,
+  }) : super(HomeState()) {
     on<InitialData>(_onInitial);
     on<OnChangeRangeDate>(_onChangeRangeDate);
     on<FetchInvoices>(_onFetchInvoice);
@@ -40,12 +43,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   ) async {
     try {
       emit(state.copyWith(isLoading: true, errorMessage: ''));
-      final response = await invoiceService.fetchInvoices(
+      final response = await homeRepository.getInvoices(
         startDate: event.startDate,
         endDate: event.endDate,
       );
       emit(
-        state.copyWith(isLoading: false, invoices: response, errorMessage: ''),
+        state.copyWith(isLoading: false, apiInvoices: response.data, errorMessage: ''),
       );
     } catch (e) {
       emit(state.copyWith(isLoading: false, errorMessage: e.toString()));
@@ -57,6 +60,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     Emitter<HomeState> emit,
   ) {
     emit(state.copyWith(startDate: event.startDate, endDate: event.endDate));
+
+    // Trigger both old and new API calls for backward compatibility
     add(FetchInvoices(startDate: event.startDate, endDate: event.endDate));
   }
 
@@ -65,12 +70,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       HomeState(
         isLoading: false,
         errorMessage: '',
-        invoices: state.invoices,
+        apiInvoices: state.apiInvoices,
         startDate: null,
         endDate: null,
+        total: state.total,
       ),
     );
 
     add(FetchInvoices());
+
   }
 }

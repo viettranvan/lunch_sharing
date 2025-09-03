@@ -6,7 +6,7 @@ import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:lunch_sharing/firebase_options.dart';
-import 'package:lunch_sharing/utils/router.dart';
+import 'src/router/router.dart';
 
 Future<void> main() async {
   GoRouter.optionURLReflectsImperativeAPIs = true;

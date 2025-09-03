@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lunch_sharing/models/index.dart';
+import 'package:lunch_sharing/src/models/api_models.dart';
 
 class OrderedTable extends StatelessWidget {
   const OrderedTable({
@@ -13,7 +13,7 @@ class OrderedTable extends StatelessWidget {
   final String date;
   final String storeName;
   final double paidAmount;
-  final List<Orderers> ordered;
+  final List<ApiOrderer> ordered;
 
   @override
   Widget build(BuildContext context) {
@@ -164,7 +164,7 @@ class OrderedTable extends StatelessWidget {
                   children: [
                     // * Name
                     Text(
-                      ordered[index].name,
+                      ordered[index].user.name,
                       textAlign: TextAlign.center,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,

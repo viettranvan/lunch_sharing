@@ -16,7 +16,7 @@
                 "--web-browser-flag=--disable-web-security"
             ],
 
-            // "toolArgs": ["--dart-define-from-file", ".key.dev.json"]
+            "toolArgs": ["--dart-define-from-file", ".key.json"]
         },
         {
             "name": "lunch_sharing",

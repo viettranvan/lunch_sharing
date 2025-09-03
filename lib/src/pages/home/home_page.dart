@@ -3,8 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:lunch_sharing/pages/home/bloc/home_bloc.dart';
-import 'package:lunch_sharing/services/invoice_service.dart';
+import 'package:lunch_sharing/src/common/network/index.dart';
+import 'package:lunch_sharing/src/pages/home/bloc/home_bloc.dart';
+import 'package:lunch_sharing/src/pages/home/bloc/home_repository.dart';
 import 'package:lunch_sharing/utils/utils.dart';
 import 'package:lunch_sharing/widgets/index.dart';
 
@@ -20,7 +21,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          HomeBloc(invoiceService: InvoiceService())..add(FetchInvoices()),
+          HomeBloc(homeRepository: HomeRepository(client: DioClient()))
+            ..add(FetchInvoices()),
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Lunch Sharing'),
@@ -120,14 +122,14 @@ class _HomePageState extends State<HomePage> {
           },
           builder: (context, state) {
             final listData = state.showPaidInvoices
-                ? state.invoices
-                : state.invoices
+                ? state.apiInvoices
+                : state.apiInvoices
                     .where(
                         (e) => e.orderers.any((order) => order.isPaid == false))
                     .toList();
             return Column(
               children: [
-                OrderedOverview(invoices: state.invoices),
+                OrderedOverview(invoices: state.apiInvoices),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: DashedLine(thickness: 2),
@@ -141,7 +143,7 @@ class _HomePageState extends State<HomePage> {
                     itemBuilder: (context, index) {
                       final order = listData[index];
                       return OrderedTable(
-                        date: formatFirebaseTimestamp(order.createdAt),
+                        date: formatDateTime(order.createdAt),
                         storeName: order.storeName,
                         paidAmount: order.paidAmount,
                         ordered: order.orderers,

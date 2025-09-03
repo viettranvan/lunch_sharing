@@ -4,44 +4,49 @@ class HomeState extends Equatable {
   const HomeState({
     this.isLoading = false,
     this.errorMessage = '',
-    this.invoices = const [],
+    this.apiInvoices = const [],
     this.startDate,
     this.endDate,
     this.showPaidInvoices = false,
+    this.total = 0,
   });
 
   final bool isLoading;
   final String errorMessage;
-  final List<Invoices> invoices;
+  final List<ApiInvoice> apiInvoices; // New API invoices
   final DateTime? startDate;
   final DateTime? endDate;
   final bool showPaidInvoices;
+  final int total;
 
   @override
   List<Object?> get props => [
         isLoading,
         errorMessage,
-        invoices,
+        apiInvoices,
         startDate,
         endDate,
         showPaidInvoices,
+        total,
       ];
 
   HomeState copyWith({
     bool? isLoading,
     String? errorMessage,
-    List<Invoices>? invoices,
+    List<ApiInvoice>? apiInvoices,
     DateTime? startDate,
     DateTime? endDate,
     bool? showPaidInvoices,
+    int? total,
   }) {
     return HomeState(
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
       isLoading: isLoading ?? this.isLoading,
       errorMessage: errorMessage ?? this.errorMessage,
-      invoices: invoices ?? this.invoices,
+      apiInvoices: apiInvoices ?? this.apiInvoices,
       showPaidInvoices: showPaidInvoices ?? this.showPaidInvoices,
+      total: total ?? this.total,
     );
   }
 }

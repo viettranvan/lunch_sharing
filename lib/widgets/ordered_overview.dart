@@ -1,24 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:lunch_sharing/models/invoices.dart';
-import 'package:lunch_sharing/models/orderer.dart';
+import 'package:lunch_sharing/src/models/api_models.dart';
 
 class OrderedOverview extends StatefulWidget {
   const OrderedOverview({super.key, required this.invoices});
-  final List<Invoices> invoices;
+  final List<ApiInvoice> invoices;
 
   @override
   State<OrderedOverview> createState() => _OrderedOverviewState();
 }
 
 class _OrderedOverviewState extends State<OrderedOverview> {
-  List<String> users = [];
+  List<ApiUser> users = [];
 
   @override
   void initState() {
     for (var element in widget.invoices) {
       for (var orderer in element.orderers) {
-        if (!users.contains(orderer.name)) {
-          users.add(orderer.name);
+        if (!users.contains(orderer.user)) {
+          users.add(orderer.user);
         }
       }
     }
@@ -30,34 +29,29 @@ class _OrderedOverviewState extends State<OrderedOverview> {
     if (oldWidget.invoices != widget.invoices) {
       for (var element in widget.invoices) {
         for (var orderer in element.orderers) {
-          if (!users.contains(orderer.name)) {
-            users.add(orderer.name);
+          if (!users.contains(orderer.user)) {
+            users.add(orderer.user);
           }
         }
       }
 
-      for (final user in List<String>.from(users)) {
+      for (final user in List<ApiUser>.from(users)) {
         if (buildFinal(user, widget.invoices) == 0) {
           users.remove(user);
         }
       }
     }
+
     super.didUpdateWidget(oldWidget);
   }
 
-  String buildSum(String userName, List<Invoices> invoices) {
+  String buildSum(String userName, List<ApiInvoice> invoices) {
     String result = '';
 
     for (final invoice in invoices) {
-      Orderers orderer = invoice.orderers.firstWhere(
-        (orderer) => orderer.name == userName,
-        orElse: () => Orderers(
-          id: '',
-          actualPrice: 0.0,
-          isPaid: false,
-          name: userName,
-          percentage: 0.0,
-        ),
+      ApiOrderer orderer = invoice.orderers.firstWhere(
+        (orderer) => orderer.user.name == userName,
+        orElse: () => ApiOrderer.empty(),
       );
       if (result.isEmpty && orderer.actualPrice != 0 && !orderer.isPaid) {
         result += orderer.actualPrice.toStringAsFixed(2);
@@ -71,20 +65,13 @@ class _OrderedOverviewState extends State<OrderedOverview> {
     return result;
   }
 
-  double buildFinal(String userName, List<Invoices> invoices) {
+  double buildFinal(ApiUser user, List<ApiInvoice> invoices) {
     double result = 0;
 
     for (final invoice in invoices) {
-      Orderers orderer = invoice.orderers.firstWhere(
-        (orderer) => orderer.name == userName,
-        orElse: () => Orderers(
-          id: '',
-          actualPrice: 0.0,
-          isPaid: false,
-          itemPrice: 0.0,
-          name: userName,
-          percentage: 0.0,
-        ),
+      final orderer = invoice.orderers.firstWhere(
+        (orderer) => orderer.user.name == user.name,
+        orElse: () => ApiOrderer.empty(),
       );
       if (!orderer.isPaid) {
         result += orderer.actualPrice;
@@ -114,7 +101,7 @@ class _OrderedOverviewState extends State<OrderedOverview> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                users[index],
+                users[index].name,
                 textAlign: TextAlign.center,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -126,7 +113,7 @@ class _OrderedOverviewState extends State<OrderedOverview> {
             ),
             // * Name
             Text(
-              buildSum(users[index], widget.invoices),
+              buildSum(users[index].name, widget.invoices),
               textAlign: TextAlign.center,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -135,6 +122,13 @@ class _OrderedOverviewState extends State<OrderedOverview> {
             // * Name
             Text(
               buildFinal(users[index], widget.invoices).toStringAsFixed(2),
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+            ),
+            Text(
+              'Mark as Paid',
               textAlign: TextAlign.center,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
