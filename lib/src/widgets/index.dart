@@ -5,4 +5,3 @@ export 'date_picker.dart';
 export 'date_range_picker.dart';
 export 'ordered_overview.dart';
 export 'ordered_table.dart';
-export 'ordered_table_action.dart';

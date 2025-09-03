@@ -8,8 +8,9 @@ import 'package:lunch_sharing/src/common/network/index.dart';
 import 'package:lunch_sharing/src/pages/home/bloc/home_bloc.dart';
 import 'package:lunch_sharing/src/pages/home/bloc/home_repository.dart';
 import 'package:lunch_sharing/src/router/router.dart';
-import 'package:lunch_sharing/utils/utils.dart';
-import 'package:lunch_sharing/widgets/index.dart';
+import 'package:lunch_sharing/src/widgets/index.dart';
+
+import '../../common/utils/index.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

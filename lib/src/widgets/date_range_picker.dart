@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:lunch_sharing/widgets/index.dart';
+import 'package:lunch_sharing/src/widgets/index.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class DateRangePicker {

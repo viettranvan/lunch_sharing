@@ -7,7 +7,7 @@ import 'package:lunch_sharing/src/common/network/index.dart';
 import 'package:lunch_sharing/src/pages/add_invoice/bloc/add_invoice_bloc.dart';
 import 'package:lunch_sharing/src/pages/add_invoice/bloc/invoice_repository.dart';
 import 'package:lunch_sharing/src/router/router.dart';
-import 'package:lunch_sharing/widgets/index.dart';
+import 'package:lunch_sharing/src/widgets/index.dart';
 
 class AddInvoicePage extends StatefulWidget {
   const AddInvoicePage({super.key});
