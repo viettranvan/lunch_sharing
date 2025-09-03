@@ -85,6 +85,19 @@ class ApiOrderer extends Equatable {
     );
   }
 
+  factory ApiOrderer.initUser(ApiUser user) {
+    return ApiOrderer(
+      id: 0,
+      actualPrice: 0.0,
+      isPaid: false,
+      itemPrice: 0.0,
+      percentage: 0.0,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+      user: user,
+    );
+  }
+
   factory ApiOrderer.empty() {
     return ApiOrderer(
       id: 0,
@@ -285,4 +298,39 @@ class ApiInvoiceListResponse extends Equatable {
   @override
   String toString() =>
       'ApiInvoiceListResponse(total: $total, data: ${data.length} invoices)';
+}
+
+/// Request orderer model for creating invoices
+class ApiOrdererRequest extends Equatable {
+  final double actualPrice;
+  final double itemPrice;
+  final double percentage;
+  final bool isPaid;
+  final int userId;
+
+  const ApiOrdererRequest({
+    required this.actualPrice,
+    required this.itemPrice,
+    required this.percentage,
+    required this.isPaid,
+    required this.userId,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'actual_price': actualPrice,
+      'item_price': itemPrice,
+      'percentage': percentage,
+      'is_paid': isPaid,
+      'user_id': userId,
+    };
+  }
+
+  @override
+  List<Object?> get props =>
+      [actualPrice, itemPrice, percentage, isPaid, userId];
+
+  @override
+  String toString() =>
+      'ApiOrdererRequest(userId: $userId, actualPrice: $actualPrice, isPaid: $isPaid)';
 }

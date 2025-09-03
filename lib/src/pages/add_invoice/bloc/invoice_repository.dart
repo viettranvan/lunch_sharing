@@ -20,16 +20,18 @@ class InvoiceRepository {
   Future<bool> addInvoice({
     required String storeName,
     required double paidAmount,
-    required DateTime date,
-    required List<ApiOrderer> orderers,
+    required DateTime createdAt,
+    required List<ApiOrdererRequest> orderers,
   }) async {
     try {
-      final response = await client.post('/invoices', data: {
-        'storeName': storeName,
-        'paidAmount': paidAmount,
-        'date': date.toIso8601String(),
+      final body = {
+        'store_name': storeName,
+        'paid_amount': paidAmount,
+        'created_at': createdAt.toIso8601String(),
         'orderers': orderers.map((o) => o.toJson()).toList(),
-      });
+      };
+
+      final response = await client.post('/invoices', data: body);
       return response.success;
     } catch (e) {
       return false;

@@ -78,8 +78,16 @@ class AddInvoiceBloc extends Bloc<AddInvoiceEvent, AddInvoiceState> {
         final sts = await repository.addInvoice(
           storeName: nameController.text,
           paidAmount: double.tryParse(amountController.text) ?? 0.0,
-          date: state.date,
-          orderers: state.orderers,
+          createdAt: state.date,
+          orderers: state.orderers
+              .map((orderer) => ApiOrdererRequest(
+                    actualPrice: orderer.actualPrice,
+                    itemPrice: orderer.itemPrice,
+                    percentage: orderer.percentage,
+                    isPaid: orderer.isPaid,
+                    userId: orderer.user.id,
+                  ))
+              .toList(),
         );
         if (sts) {
           nameController.clear();

@@ -36,7 +36,7 @@ class _AddInvoicePageState extends State<AddInvoicePage> {
             endDrawer: Drawer(
               width: 600,
               child: AddRecordDrawer(
-                users: state.users.map((user) => user.name).toList(),
+                users: state.users,
                 onConfirm: (value) {
                   bloc.add(UpdateStateValue(orderers: value));
                 },

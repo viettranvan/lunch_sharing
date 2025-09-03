@@ -5,7 +5,7 @@ import 'package:lunch_sharing/src/models/api_models.dart';
 
 class AddRecordDrawer extends StatefulWidget {
   const AddRecordDrawer({super.key, this.onConfirm, required this.users});
-  final List<String> users;
+  final List<ApiUser> users;
 
   final Function(List<ApiOrderer>)? onConfirm;
   @override
@@ -18,7 +18,7 @@ class _AddRecordDrawerState extends State<AddRecordDrawer> {
 
   @override
   void initState() {
-    orderers = widget.users.map((e) => ApiOrderer.initName(e)).toList();
+    orderers = widget.users.map((e) => ApiOrderer.initUser(e)).toList();
     super.initState();
   }
 

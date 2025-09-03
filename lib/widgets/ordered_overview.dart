@@ -137,25 +137,28 @@ class _OrderedOverviewState extends State<OrderedOverview> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: buildFinal(users[index], widget.invoices) > 0
-                  ? InkWell(
-                      onTap: () => widget.onMarkPaid?.call(users[index].id),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 6,
-                          horizontal: 12,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.green.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(4),
-                          border: Border.all(color: Colors.green, width: 1),
-                        ),
-                        child: const Text(
-                          'Mark as Paid',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 12,
-                            color: Colors.green,
+                  ? Align(
+                      alignment: Alignment.center,
+                      child: InkWell(
+                        onTap: () => widget.onMarkPaid?.call(users[index].id),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 6,
+                            horizontal: 12,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.green.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(color: Colors.green, width: 1),
+                          ),
+                          child: const Text(
+                            'Mark as Paid',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 12,
+                              color: Colors.green,
+                            ),
                           ),
                         ),
                       ),
