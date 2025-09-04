@@ -38,13 +38,13 @@ jobs:
           fi
           echo "Using base-href: $BASE_HREF"
 
-      - name: Build web (with dart-define-from-file)
+      - name: Build web (with production BASE_URL)
         run: |
           flutter build web \
             --release \
             --pwa-strategy=none \
             --base-href "${BASE_HREF}" \
-            --dart-define-from-file=.key.json
+            --dart-define=BASE_URL=${{ secrets.BASE_URL || 'https://lunch-sharing-be.vercel.app' }}
 
       # SPA fallback + nojekyll + (optional) CNAME từ secret CUSTOM_DOMAIN
       - name: Add SPA fallback and meta

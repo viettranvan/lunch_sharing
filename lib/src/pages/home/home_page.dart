@@ -23,10 +23,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => HomeBloc(
-          homeRepository: HomeRepository(
-              client: DioClient(baseUrl: 'http://localhost:3000')))
-        ..add(FetchInvoices()),
+      create: (context) =>
+          HomeBloc(homeRepository: HomeRepository(client: DioClient()))
+            ..add(FetchInvoices()),
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Lunch Sharing'),
