@@ -24991,8 +24991,8 @@ _.e=e
 _.$ti=f},
 a2v:function a2v(a,b){this.a=a
 this.b=b},
-aBA(a){var s=new A.a5B()
-s.a5e(a)
+aBA(){var s=new A.a5B()
+s.a5e(null)
 return s},
 a5B:function a5B(){this.a=$},
 a5G:function a5G(){},
@@ -88233,15 +88233,13 @@ A.a2v.prototype={
 $1(a){return this.a.$1(t.P.a(a))},
 $S(){return this.b.h("0(@)")}}
 A.a5B.prototype={
-a5e(a){var s,r="application/json",q=a==null?"https://lunch-sharing-be.vercel.app":a
-q=A.aPF(q,B.pC,A.ad(["Content-Type",r,"Accept",r],t.N,t.z),B.pC,new A.a5G())
-s=new A.O1(A.a([B.Kd],t.i6))
-s.T(s,B.Wf)
-s=new A.a5H($,s,$,new A.a9p(51200),!1)
-s.WH$=q
-s.WJ$=new A.a3j(A.aE(t.m))
+a5e(a){var s="application/json",r=A.aPF("https://lunch-sharing-be.vercel.app",B.pC,A.ad(["Content-Type",s,"Accept",s],t.N,t.z),B.pC,new A.a5G()),q=new A.O1(A.a([B.Kd],t.i6))
+q.T(q,B.Wf)
+q=new A.a5H($,q,$,new A.a9p(51200),!1)
+q.WH$=r
+q.WJ$=new A.a3j(A.aE(t.m))
 this.a!==$&&A.bn()
-this.a=s
+this.a=q
 this.aj1()},
 aj1(){var s=this.a
 s===$&&A.b()
@@ -88590,7 +88588,7 @@ A.SK.prototype={
 J(a){var s=t.I_
 return A.aBa(A.aB9(new A.anS(),new A.anT(),s,t.wP),new A.anU(),s)}}
 A.anU.prototype={
-$1(a){var s=A.aBA(null),r=$.ar(),q=Date.now()
+$1(a){var s=A.aBA(),r=$.ar(),q=Date.now()
 q=new A.nd(new A.ab8(s),new A.kS(B.hp,r),new A.kS(B.hp,r),A.kM(null,!1,t.ow),A.a([],t.aU),A.a([],t._X),A.a([],t.Nd),$.aAC(),B.kS,new A.e3(!1,"",B.vH,new A.bF(q,0,!1),B.W6,0))
 q.hE(q.ga62(),t.YN)
 q.hE(q.gagd(),t.VL)
@@ -89188,7 +89186,7 @@ A.Vu.prototype={
 J(a){var s=null,r=t.gh,q=t.Oq,p=A.a2w(A.a([A.aFm(s,s,new A.as6(),r,q)],t.p),s,s,B.aaM),o=A.aGE(A.fC(B.qd,s,s,s),new A.as7(a),s)
 return A.aBa(A.aiR(p,A.aB9(new A.as8(),new A.as9(),r,q),s,o),new A.asa(),r)}}
 A.asa.prototype={
-$1(a){var s=A.aSi(new A.aaF(A.aBA("http://localhost:3000")))
+$1(a){var s=A.aSi(new A.aaF(A.aBA()))
 s.D(0,new A.lE(null,null))
 return s},
 $S:589}
@@ -89523,7 +89521,7 @@ J(a){var s=null,r=A.U(a).ax,q=r.y2,p=t.rg
 return A.aBa(A.aiR(A.a2w(s,q==null?r.c:q,s,B.aaW),A.aB9(new A.acc(this),new A.acd(),p,t.Dh),s,s),new A.ace(),p)},
 ajb(a){A.Ks(new A.ac9(new A.kS(B.hp,$.ar()),a),a,t.z)}}
 A.ace.prototype={
-$1(a){var s=new A.o0(new A.anf(A.aBA(null)),A.kM(null,!1,t.Rq),A.a([],t.aU),A.a([],t._X),A.a([],t.Nd),$.aAC(),B.kS,new A.dN(B.vH,!1,""))
+$1(a){var s=new A.o0(new A.anf(A.aBA()),A.kM(null,!1,t.Rq),A.a([],t.aU),A.a([],t._X),A.a([],t.Nd),$.aAC(),B.kS,new A.dN(B.vH,!1,""))
 s.hE(s.gaft(),t.XV)
 s.hE(s.gafe(),t.hn)
 s.hE(s.gaf0(),t.E7)
