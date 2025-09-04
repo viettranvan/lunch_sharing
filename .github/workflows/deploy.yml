@@ -1,45 +1,61 @@
 name: Deploy Lunch Sharing to GitHub Pages
 
-# Cấp phép ghi nội dung để deploy
-permissions:
-  contents: write
-  pages: write
-
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: subosito/flutter-action@v2
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.32.3' # thay bằng version bạn dùng
+          flutter-version: '3.32.3'
+          channel: stable
+          cache: true
 
-      # (Tùy chọn) Cách B: Đọc từ file JSON đã commit trong repo
-      - name: Build web (from file)
+      - name: Pub get
+        run: flutter pub get
+
+      # Tính base-href theo loại repo (user.github.io vs repo thường)
+      - name: Compute base-href
+        shell: bash
+        run: |
+          REPO_NAME="${GITHUB_REPOSITORY#*/}"
+          if [[ "$REPO_NAME" == *.github.io ]]; then
+            echo "BASE_HREF=/" >> "$GITHUB_ENV"
+          else
+            echo "BASE_HREF=/$REPO_NAME/" >> "$GITHUB_ENV"
+          fi
+          echo "Using base-href: $BASE_HREF"
+
+      - name: Build web (with dart-define-from-file)
         run: |
           flutter build web \
             --release \
             --pwa-strategy=none \
-            --base-href "/${{ github.event.repository.name }}/" \
+            --base-href "${BASE_HREF}" \
             --dart-define-from-file=.key.json
 
-      - name: Add SPA fallback + .nojekyll + CNAME (optional)
+      # SPA fallback + nojekyll + (optional) CNAME từ secret CUSTOM_DOMAIN
+      - name: Add SPA fallback and meta
         run: |
-          cp web/404.html build/web/ || true
+          cp build/web/index.html build/web/404.html
           touch build/web/.nojekyll
           if [ -n "${{ secrets.CUSTOM_DOMAIN }}" ]; then echo "${{ secrets.CUSTOM_DOMAIN }}" > build/web/CNAME; fi
 
-
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
           publish_dir: build/web
-          # publish_branch: deploy-web # nếu bạn muốn deploy vào branch khác ngoài gh-pages 
