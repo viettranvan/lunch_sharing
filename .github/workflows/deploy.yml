@@ -21,7 +21,21 @@ jobs:
         with:
           flutter-version: '3.32.3' # thay bằng version bạn dùng
 
-      - run: flutter build web
+      # (Tùy chọn) Cách B: Đọc từ file JSON đã commit trong repo
+      - name: Build web (from file)
+        run: |
+          flutter build web \
+            --release \
+            --pwa-strategy=none \
+            --base-href "/${{ github.event.repository.name }}/" \
+            --dart-define-from-file=.key.json
+
+      - name: Add SPA fallback + .nojekyll + CNAME (optional)
+        run: |
+          cp web/404.html build/web/ || true
+          touch build/web/.nojekyll
+          if [ -n "${{ secrets.CUSTOM_DOMAIN }}" ]; then echo "${{ secrets.CUSTOM_DOMAIN }}" > build/web/CNAME; fi
+
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
